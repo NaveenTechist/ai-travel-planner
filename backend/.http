@@ -1,0 +1,92 @@
+
+POST http://localhost:5000/api/auth/register
+Content-Type: application/json
+
+{
+  "email":"firstuser@gmail.com",
+  "password":"123456"
+}
+####
+
+POST http://localhost:5000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "firstuser@gmail.com",
+  "password": "123456"
+}
+####
+
+GET http://localhost:5000/api/trips
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTM2OWIzOTFmMGVmM2Y1NTAxMDhkODYiLCJpYXQiOjE3ODE5NjM5OTUsImV4cCI6MTc4MjU2ODc5NX0.cPIBjBhkURgoidH7T_3C4A_S8OF5alVZA744nFbqE8M
+
+{
+  "message": "Protected Route Success",
+  "user": {
+    "userId": "68554f..."
+  }
+}
+####
+POST http://localhost:5000/api/trips
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTM2OWIzOTFmMGVmM2Y1NTAxMDhkODYiLCJpYXQiOjE3ODE5NjM5OTUsImV4cCI6MTc4MjU2ODc5NX0.cPIBjBhkURgoidH7T_3C4A_S8OF5alVZA744nFbqE8M
+
+{
+  "destination": "Tokyo, Japan",
+  "durationDays": 5,
+  "budgetTier": "Medium",
+  "interests": [
+    "Anime",
+    "Food",
+    "Technology",
+    "Culture"
+  ],
+  "itinerary": [
+    {
+      "dayNumber": 1,
+      "activities": [
+        {
+          "title": "Visit Senso-ji Temple",
+          "description": "Explore Tokyo's oldest Buddhist temple and nearby Nakamise Street.",
+          "estimatedCost": 10
+        },
+        {
+          "title": "Tokyo Skytree",
+          "description": "Enjoy panoramic city views from the observation deck.",
+          "estimatedCost": 25
+        }
+      ]
+    },
+    {
+      "dayNumber": 2,
+      "activities": [
+        {
+          "title": "Akihabara Anime District",
+          "description": "Visit anime stores, gaming centers and themed cafes.",
+          "estimatedCost": 40
+        }
+      ]
+    }
+  ],
+  "estimatedBudget": {
+    "accommodation": 400,
+    "food": 200,
+    "activities": 150,
+    "transport": 100
+  },
+  "hotels": [
+    "Hotel Gracery Shinjuku",
+    "Shinjuku Prince Hotel",
+    "Tokyu Stay Shinjuku"
+  ],
+  "packingList": [
+    "Passport",
+    "Travel Insurance",
+    "Power Bank",
+    "Universal Adapter",
+    "Comfortable Walking Shoes",
+    "Light Jacket",
+    "Rain Umbrella"
+  ]
+}
+####
