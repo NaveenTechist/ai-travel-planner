@@ -8,6 +8,7 @@ const app = express();
 connectDB();
 
 app.get("/", (req, res) => {
+  console.log("===> API Running...");
   res.send("API Running...");
 });
 

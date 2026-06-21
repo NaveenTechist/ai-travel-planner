@@ -18,7 +18,7 @@ Content-Type: application/json
 ####
 
 GET http://localhost:5000/api/trips
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTM2OWIzOTFmMGVmM2Y1NTAxMDhkODYiLCJpYXQiOjE3ODE5NjM5OTUsImV4cCI6MTc4MjU2ODc5NX0.cPIBjBhkURgoidH7T_3C4A_S8OF5alVZA744nFbqE8M
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTM2OWIzOTFmMGVmM2Y1NTAxMDhkODYiLCJpYXQiOjE3ODIwMDY0MTQsImV4cCI6MTc4MjYxMTIxNH0.2bl0puuLyhqyYYf7dT0g50g7_6z2SpfsdctF5RH-aRU
 
 {
   "message": "Protected Route Success",
@@ -29,7 +29,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTM2O
 ####
 POST http://localhost:5000/api/trips
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTM2OWIzOTFmMGVmM2Y1NTAxMDhkODYiLCJpYXQiOjE3ODE5NjM5OTUsImV4cCI6MTc4MjU2ODc5NX0.cPIBjBhkURgoidH7T_3C4A_S8OF5alVZA744nFbqE8M
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTM2OWIzOTFmMGVmM2Y1NTAxMDhkODYiLCJpYXQiOjE3ODIwMDY0MTQsImV4cCI6MTc4MjYxMTIxNH0.2bl0puuLyhqyYYf7dT0g50g7_6z2SpfsdctF5RH-aRU
 
 {
   "destination": "Tokyo, Japan",
@@ -88,5 +88,111 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTM2O
     "Light Jacket",
     "Rain Umbrella"
   ]
+}
+####
+
+GET http://localhost:5000/api/trips
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTM2OWIzOTFmMGVmM2Y1NTAxMDhkODYiLCJpYXQiOjE3ODE5NjM5OTUsImV4cCI6MTc4MjU2ODc5NX0.cPIBjBhkURgoidH7T_3C4A_S8OF5alVZA744nFbqE8M
+####
+
+PUT http://localhost:5000/api/trips/6a36a4f6d14de6514d0d1ddb
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTM2OWIzOTFmMGVmM2Y1NTAxMDhkODYiLCJpYXQiOjE3ODE5NjM5OTUsImV4cCI6MTc4MjU2ODc5NX0.cPIBjBhkURgoidH7T_3C4A_S8OF5alVZA744nFbqE8M
+
+{
+  "destination": "Kyoto, Japan",
+  "durationDays": 3
+}
+####
+
+DELETE http://localhost:5000/api/trips/6a36a4f6d14de6514d0d1ddb
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTM2OWIzOTFmMGVmM2Y1NTAxMDhkODYiLCJpYXQiOjE3ODE5NjM5OTUsImV4cCI6MTc4MjU2ODc5NX0.cPIBjBhkURgoidH7T_3C4A_S8OF5alVZA744nFbqE8M
+####
+
+# New second User
+
+POST http://localhost:5000/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "seconduser@gmail.com",
+  "password": "Password@123"
+}
+####
+
+POST http://localhost:5000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "seconduser@gmail.com",
+  "password": "Password@123"
+}
+####
+
+POST http://localhost:5000/api/trips
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTM3NDFlY2M2ZThkMWM4YWE3MjZiNzAiLCJpYXQiOjE3ODIwMDYyNzMsImV4cCI6MTc4MjYxMTA3M30.TKbPUj_nfniwkmEZ9cVPA9f_ZM1HYHBuPOEEJPLeQXU
+
+{
+  "destination": "Paris, France",
+  "durationDays": 6,
+  "budgetTier": "High",
+  "interests": [
+    "Art",
+    "Food",
+    "Museums",
+    "Fashion"
+  ],
+  "itinerary": [
+    {
+      "dayNumber": 1,
+      "activities": [
+        {
+          "title": "Eiffel Tower Visit",
+          "description": "Visit the Eiffel Tower and enjoy city views.",
+          "estimatedCost": 40
+        }
+      ]
+    },
+    {
+      "dayNumber": 2,
+      "activities": [
+        {
+          "title": "Louvre Museum",
+          "description": "Explore famous artworks including Mona Lisa.",
+          "estimatedCost": 30
+        }
+      ]
+    }
+  ],
+  "estimatedBudget": {
+    "accommodation": 900,
+    "food": 350,
+    "activities": 250,
+    "transport": 150
+  },
+  "hotels": [
+    "Hotel Regina Louvre",
+    "Le Meurice",
+    "Hotel Brighton Paris"
+  ],
+  "packingList": [
+    "Passport",
+    "Travel Insurance",
+    "Power Bank",
+    "Jacket",
+    "Walking Shoes",
+    "Umbrella"
+  ]
+}
+####
+
+# Ownership checking here
+PUT http://localhost:5000/api/trips/6a37422fc6e8d1c8aa726b71
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTM2OWIzOTFmMGVmM2Y1NTAxMDhkODYiLCJpYXQiOjE3ODIwMDY0MTQsImV4cCI6MTc4MjYxMTIxNH0.2bl0puuLyhqyYYf7dT0g50g7_6z2SpfsdctF5RH-aRU
+
+{
+  "destination": "Hacked Trip"
 }
 ####

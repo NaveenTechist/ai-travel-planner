@@ -68,7 +68,7 @@ const login = async (req, res) => {
 
         if (!user) {
             return res.status(401).json({
-                message: "Invalid credentials",
+                message: "User not found",
             });
         }
 
@@ -95,6 +95,10 @@ const login = async (req, res) => {
 
         res.status(200).json({
             token,
+            user: {
+                id: user._id,
+                email: user.email,
+            },
         });
 
     } catch (error) {

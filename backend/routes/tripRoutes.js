@@ -11,12 +11,22 @@ const {
     deleteTrip,
 } = require("../controllers/tripController");
 
-router.get("/", auth, (req, res) => {
-    res.json({
-        message: "Protected Route Success",
-        user: req.user
-    });
-});
+const {
+    generateTripPlan,
+} = require("../services/aiServices");
+
+// router.get("/", auth, (req, res) => {
+//     res.json({
+//         message: "Protected Route Success",
+//         user: req.user
+//     });
+// });
+
+router.post(
+    "/generate",
+    auth,
+    generateTripPlan
+);
 
 router.post("/", auth, createTrip);
 

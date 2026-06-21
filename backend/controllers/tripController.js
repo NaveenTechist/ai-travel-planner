@@ -1,22 +1,34 @@
 const mongoose = require("mongoose");
 const Trip = require("../models/Trip");
 
+const {
+    validateTripInput
+} = require("../services/tripInputValidationService");
+
+const {
+    validateAITrip
+} = require("../services/tripAIValidationService");
+
+const {
+    generateTripPlan
+} = require("../services/aiServices");
+
+
 // CREATE TRIP
 const createTrip = async (req, res) => {
     console.log("=== CREATE TRIP ===");
     try {
-        const {
-            destination,
-            durationDays,
-            budgetTier,
-            interests,
-            itinerary,
-            estimatedBudget,
-            hotels,
-            packingList,
-        } = req.body;
 
-        if (!destination || !durationDays || !budgetTier) {
+        // BEFORE AI VALIDATE USER DATA
+        validateTripInput(req.body);
+
+        const aiTrip = await generateTripPlan(req.body);
+
+
+        // AFTER AI GEN VALIDATE AI RESPONSE
+        validateAITrip(aiTrip);
+
+        if (!aiTrip.destination || !aiTrip.durationDays || !aiTrip.budgetTier) {
             return res.status(400).json({
                 success: false,
                 message: "Destination, duration and budgetTier are required",
@@ -25,14 +37,14 @@ const createTrip = async (req, res) => {
 
         const trip = await Trip.create({
             userId: req.user.userId,
-            destination,
-            durationDays,
-            budgetTier,
-            interests,
-            itinerary,
-            estimatedBudget,
-            hotels,
-            packingList,
+            destination: aiTrip.destination,
+            durationDays: aiTrip.durationDays,
+            budgetTier: aiTrip.budgetTier,
+            interests: aiTrip.interests,
+            itinerary: aiTrip.itinerary,
+            estimatedBudget: aiTrip.estimatedBudget,
+            hotels: aiTrip.hotels,
+            packingList: aiTrip.packingList,
         });
 
         return res.status(201).json({
@@ -53,6 +65,7 @@ const createTrip = async (req, res) => {
 
 // GET CURRENT USER TRIPS
 const getTrips = async (req, res) => {
+    console.log("=== GET TRIPS ===");
     try {
         const trips = await Trip.find({
             userId: req.user.userId,
@@ -76,6 +89,11 @@ const getTrips = async (req, res) => {
 
 // UPDATE TRIP
 const updateTrip = async (req, res) => {
+    console.log("============== UPDATE TRIP ===============");
+
+    delete req.body.userId;
+    delete req.body._id;
+
     try {
         const { tripId } = req.params;
 
@@ -99,10 +117,15 @@ const updateTrip = async (req, res) => {
         }
 
         const updatedTrip = await Trip.findByIdAndUpdate(
-            tripId,
-            req.body,
             {
-                new: true,
+                _id: tripId,
+                userId: req.user.userId,
+            },
+            {
+                $set: req.body,
+            },
+            {
+                returnDocument: "after",
                 runValidators: true,
             }
         );
