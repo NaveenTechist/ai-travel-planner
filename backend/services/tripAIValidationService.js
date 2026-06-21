@@ -1,4 +1,5 @@
 const validateAITrip = (trip) => {
+    console.log("=== After Validating Trip ===");
 
     if (!trip.destination) {
         throw new Error("AI destination missing");

@@ -92,7 +92,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTM2O
 ####
 
 GET http://localhost:5000/api/trips
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTM2OWIzOTFmMGVmM2Y1NTAxMDhkODYiLCJpYXQiOjE3ODE5NjM5OTUsImV4cCI6MTc4MjU2ODc5NX0.cPIBjBhkURgoidH7T_3C4A_S8OF5alVZA744nFbqE8M
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTM2OWIzOTFmMGVmM2Y1NTAxMDhkODYiLCJpYXQiOjE3ODIwMDY0MTQsImV4cCI6MTc4MjYxMTIxNH0.2bl0puuLyhqyYYf7dT0g50g7_6z2SpfsdctF5RH-aRU
 ####
 
 PUT http://localhost:5000/api/trips/6a36a4f6d14de6514d0d1ddb
@@ -194,5 +194,22 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTM2O
 
 {
   "destination": "Hacked Trip"
+}
+####
+
+POST http://localhost:5000/api/trips/generate
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTM2OWIzOTFmMGVmM2Y1NTAxMDhkODYiLCJpYXQiOjE3ODIwMDY0MTQsImV4cCI6MTc4MjYxMTIxNH0.2bl0puuLyhqyYYf7dT0g50g7_6z2SpfsdctF5RH-aRU
+
+{
+  "destination": "India",
+  "durationDays": 3,
+  "budgetTier": "Medium",
+  "interests": [
+    "Food",
+    "Nature",
+    "Culture",
+    "Technology"
+  ]
 }
 ####

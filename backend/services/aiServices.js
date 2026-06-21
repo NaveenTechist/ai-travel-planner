@@ -1,16 +1,15 @@
-const { GoogleGenerativeAI } = require("@google/generative-ai");
+require("dotenv").config();
 
-// Validate environment variable during startup
+const { GoogleGenAI } = require("@google/genai");
+
 if (!process.env.GEMINI_API_KEY) {
-    throw new Error("GEMINI_API_KEY is missing in environment variables");
+    throw new Error(
+        "GEMINI_API_KEY is missing"
+    );
 }
 
-const genAI = new GoogleGenerativeAI(
-    process.env.GEMINI_API_KEY
-);
-
-const model = genAI.getGenerativeModel({
-    model: "gemini-1.5-flash",
+const ai = new GoogleGenAI({
+    apiKey: process.env.GEMINI_API_KEY,
 });
 
 /**
@@ -19,6 +18,7 @@ const model = genAI.getGenerativeModel({
  * @returns {Promise<Object>}
  */
 const generateTripPlan = async (tripDetails) => {
+    console.log("=== GENERATING TRIP ===");
     try {
         const {
             destination,
@@ -69,60 +69,29 @@ const generateTripPlan = async (tripDetails) => {
             `[AI SERVICE] Generating trip for ${destination}`
         );
 
-        const result = await model.generateContent(prompt);
+        const response =
+            await ai.models.generateContent({
+                model: "gemini-2.5-flash",
+                contents: prompt,
+            });
 
-        if (!result) {
-            throw new Error(
-                "Gemini returned empty result"
-            );
-        }
+        const text =
+            response.text.trim();
 
-        const response = result.response;
-
-        if (!response) {
-            throw new Error(
-                "Gemini response is missing"
-            );
-        }
-
-        const text = response.text();
-
-        if (!text) {
-            throw new Error(
-                "Gemini returned empty text"
-            );
-        }
-
-        // Remove markdown code blocks if Gemini adds them
         const cleanedResponse = text
             .replace(/```json/g, "")
             .replace(/```/g, "")
             .trim();
 
-        let parsedData;
-
-        try {
-            parsedData = JSON.parse(cleanedResponse);
-        } catch (parseError) {
-            console.error(
-                "[AI SERVICE] JSON Parse Error:",
-                cleanedResponse
-            );
-
-            throw new Error(
-                "Gemini returned invalid JSON"
-            );
-        }
-        console.log(
-            "[AI SERVICE] Trip generation successful"
+        return JSON.parse(
+            cleanedResponse
         );
-        console.log(parsedData)
-        return parsedData;
 
     } catch (error) {
+
         console.error(
-            "[AI SERVICE] Error:",
-            error.message
+            "[AI SERVICE ERROR]",
+            error
         );
 
         throw error;

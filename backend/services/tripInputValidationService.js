@@ -1,4 +1,5 @@
 const validateTripInput = (data) => {
+    console.log("=== Before Validating User Trip ===");
 
     if (!data.destination) {
         throw new Error("Destination required");
