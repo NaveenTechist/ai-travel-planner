@@ -4,11 +4,13 @@ const ActivitySchema = new mongoose.Schema({
     title: {
         type: String,
         required: true,
+        trim: true,
     },
 
     description: {
         type: String,
         default: "",
+        trim: true,
     },
 
     estimatedCost: {
@@ -28,6 +30,7 @@ const TripSchema = new mongoose.Schema(
         destination: {
             type: String,
             required: true,
+            trim: true,
         },
 
         durationDays: {
@@ -78,6 +81,10 @@ const TripSchema = new mongoose.Schema(
                 type: Number,
                 default: 0,
             },
+            total: {
+                type: Number,
+                default: 0,
+            }
         },
 
         hotels: [
@@ -85,12 +92,52 @@ const TripSchema = new mongoose.Schema(
                 type: String,
             },
         ],
+        packingList: {
+            crucialDocuments: [
+                {
+                    item: {
+                        type: String,
+                        required: true,
+                        trim: true,
+                    },
 
-        packingList: [
-            {
-                type: String,
-            },
-        ],
+                    checked: {
+                        type: Boolean,
+                        default: false,
+                    },
+                },
+            ],
+
+            activityEquipment: [
+                {
+                    item: {
+                        type: String,
+                        required: true,
+                        trim: true,
+                    },
+
+                    checked: {
+                        type: Boolean,
+                        default: false,
+                    },
+                },
+            ],
+
+            climateWear: [
+                {
+                    item: {
+                        type: String,
+                        required: true,
+                        trim: true,
+                    },
+
+                    checked: {
+                        type: Boolean,
+                        default: false,
+                    },
+                },
+            ],
+        },
     },
     {
         timestamps: true,

@@ -13,6 +13,16 @@ const {
     generateTripPlan
 } = require("../services/aiServices");
 
+const {
+    regenerateTripDay,
+} = require("../services/aiServices");
+
+const {
+    validateGeneratedDay,
+} = require(
+    "../services/dayValidationService"
+);
+
 
 // CREATE TRIP
 const createTrip = async (req, res) => {
@@ -27,6 +37,12 @@ const createTrip = async (req, res) => {
 
         // AFTER AI GEN VALIDATE AI RESPONSE
         validateAITrip(aiTrip);
+
+        aiTrip.estimatedBudget.total =
+            aiTrip.estimatedBudget.accommodation +
+            aiTrip.estimatedBudget.food +
+            aiTrip.estimatedBudget.activities +
+            aiTrip.estimatedBudget.transport;
 
         if (!aiTrip.destination || !aiTrip.durationDays || !aiTrip.budgetTier) {
             return res.status(400).json({
@@ -79,6 +95,56 @@ const getTrips = async (req, res) => {
 
     } catch (error) {
         console.error("GET TRIPS ERROR:", error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error",
+        });
+    }
+};
+
+const getTripById = async (req, res) => {
+
+    console.log("=== GET SINGLE TRIP ===");
+
+    try {
+
+        const { tripId } = req.params;
+
+        if (
+            !mongoose.Types.ObjectId.isValid(
+                tripId
+            )
+        ) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid trip id",
+            });
+        }
+
+        const trip = await Trip.findOne({
+            _id: tripId,
+            userId: req.user.userId,
+        });
+
+        if (!trip) {
+            return res.status(404).json({
+                success: false,
+                message: "Trip not found",
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            data: trip,
+        });
+
+    } catch (error) {
+
+        console.error(
+            "GET SINGLE TRIP ERROR:",
+            error
+        );
 
         return res.status(500).json({
             success: false,
@@ -146,6 +212,315 @@ const updateTrip = async (req, res) => {
     }
 };
 
+// UPDATE SINGLE DAY IN A TRIP 
+// AFTER CHECK THIS
+
+const updateDay = async (
+    req,
+    res
+) => {
+
+    console.log(
+        "=== UPDATE DAY ==="
+    );
+
+    try {
+
+        const {
+            tripId,
+            dayNumber,
+        } = req.params;
+
+        if (
+            !mongoose.Types.ObjectId.isValid(
+                tripId
+            )
+        ) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid trip id",
+            });
+        }
+
+        const trip =
+            await Trip.findOne({
+                _id: tripId,
+                userId:
+                    req.user.userId,
+            });
+
+        if (!trip) {
+            return res.status(404).json({
+                success: false,
+                message:
+                    "Trip not found",
+            });
+        }
+
+        const day =
+            trip.itinerary.find(
+                (d) =>
+                    d.dayNumber ===
+                    Number(
+                        dayNumber
+                    )
+            );
+
+        if (!day) {
+            return res.status(404).json({
+                success: false,
+                message:
+                    "Day not found",
+            });
+        }
+
+        day.activities =
+            req.body.activities;
+
+        await trip.save();
+
+        return res.status(200).json({
+            success: true,
+            message:
+                "Day updated successfully",
+            data: trip,
+        });
+
+    } catch (error) {
+
+        console.error(
+            "UPDATE DAY ERROR:",
+            error
+        );
+
+        return res.status(500).json({
+            success: false,
+            message:
+                "Internal server error",
+        });
+    }
+};
+
+
+// UPDATE PACKING LIST
+// AFTER CHECK THIS
+
+const updatePackingList =
+    async (req, res) => {
+
+        console.log(
+            "=== UPDATE PACKING LIST ==="
+        );
+
+        try {
+
+            const { tripId } =
+                req.params;
+
+            if (
+                !mongoose.Types.ObjectId.isValid(
+                    tripId
+                )
+            ) {
+                return res.status(400).json({
+                    success: false,
+                    message:
+                        "Invalid trip id",
+                });
+            }
+
+            const updatedTrip =
+                await Trip.findOneAndUpdate(
+                    {
+                        _id: tripId,
+                        userId:
+                            req.user.userId,
+                    },
+                    {
+                        $set: {
+                            packingList:
+                                req.body
+                                    .packingList,
+                        },
+                    },
+                    {
+                        returnDocument:
+                            "after",
+                        runValidators:
+                            true,
+                    }
+                );
+
+            if (!updatedTrip) {
+                return res.status(404).json({
+                    success: false,
+                    message:
+                        "Trip not found",
+                });
+            }
+
+            return res.status(200).json({
+                success: true,
+                message:
+                    "Packing list updated",
+                data: updatedTrip,
+            });
+
+        } catch (error) {
+
+            console.error(
+                "PACKING LIST ERROR:",
+                error
+            );
+
+            return res.status(500).json({
+                success: false,
+                message:
+                    "Internal server error",
+            });
+        }
+    };
+
+// AFTER CHECK THIS    
+
+const regenerateDay = async (
+    req,
+    res
+) => {
+
+    console.log(
+        "=== REGENERATE DAY ==="
+    );
+
+    try {
+
+        const {
+            tripId,
+            dayNumber,
+        } = req.params;
+
+        // ObjectId validation
+        if (
+            !mongoose.Types.ObjectId.isValid(
+                tripId
+            )
+        ) {
+            return res.status(400).json({
+                success: false,
+                message:
+                    "Invalid trip id",
+            });
+        }
+
+        const dayNum =
+            Number(dayNumber);
+
+        if (
+            !Number.isInteger(dayNum) ||
+            dayNum <= 0
+        ) {
+            return res.status(400).json({
+                success: false,
+                message:
+                    "Invalid day number",
+            });
+        }
+
+        // Ownership validation
+        const trip =
+            await Trip.findOne({
+                _id: tripId,
+                userId:
+                    req.user.userId,
+            });
+
+        if (!trip) {
+            return res.status(404).json({
+                success: false,
+                message:
+                    "Trip not found",
+            });
+        }
+
+        const existingDay =
+            trip.itinerary.find(
+                (day) =>
+                    day.dayNumber ===
+                    dayNum
+            );
+
+        if (!existingDay) {
+            return res.status(404).json({
+                success: false,
+                message:
+                    "Day not found",
+            });
+        }
+
+        // AI generation
+        const newDay =
+            await regenerateTripDay({
+                destination:
+                    trip.destination,
+
+                budgetTier:
+                    trip.budgetTier,
+
+                interests:
+                    trip.interests,
+
+                dayNumber: dayNum,
+            });
+
+        // Validate AI response
+        validateGeneratedDay(
+            newDay
+        );
+
+        // Replace day
+        const dayIndex =
+            trip.itinerary.findIndex(
+                (day) =>
+                    day.dayNumber ===
+                    dayNum
+            );
+
+        trip.itinerary[
+            dayIndex
+        ] = newDay;
+
+        await trip.save();
+
+        return res.status(200).json({
+            success: true,
+            message:
+                "Day regenerated successfully",
+            data: trip,
+        });
+
+    } catch (error) {
+
+        console.error(
+            "REGENERATE DAY ERROR:",
+            error
+        );
+
+        if (error.status === 429) {
+            return res.status(429).json({
+                success: false,
+                message:
+                    "Gemini quota exceeded",
+            });
+        }
+
+        return res.status(500).json({
+            success: false,
+            message:
+                "Internal server error",
+        });
+    }
+};
+
 // DELETE TRIP
 const deleteTrip = async (req, res) => {
     try {
@@ -191,4 +566,8 @@ module.exports = {
     getTrips,
     updateTrip,
     deleteTrip,
+    getTripById,
+    updateDay,
+    updatePackingList,
+    regenerateDay,
 };

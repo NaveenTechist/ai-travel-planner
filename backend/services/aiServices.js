@@ -28,6 +28,8 @@ const generateTripPlan = async (tripDetails) => {
         } = tripDetails;
 
         const prompt = `
+        You are an expert travel planner.
+
         Generate a realistic travel plan.
 
         Destination: ${destination}
@@ -35,20 +37,40 @@ const generateTripPlan = async (tripDetails) => {
         Budget Tier: ${budgetTier}
         Interests: ${interests.join(", ")}
 
-        Return ONLY valid JSON.
+        IMPORTANT RULES:
+
+        1. Return ONLY valid JSON.
+        2. No markdown.
+        3. No code blocks.
+        4. No explanations.
+        5. No notes.
+        6. No text before JSON.
+        7. No text after JSON.
+        8. Response must be valid for JSON.parse().
+        9. Generate exactly ${durationDays} itinerary days.
+        10. Hotels must be array of strings only.
+        11. Budget values must be numbers only.
+        12. Activity costs must be numbers only.
+        13. All fields are mandatory.
+        14. Every day must contain at least 2 activities.
+        15. Packing list must follow the exact schema below.
+
+        JSON SCHEMA:
 
         {
-        "destination": "",
+        "destination": "string",
         "durationDays": 0,
-        "budgetTier": "",
-        "interests": [],
+        "budgetTier": "Low",
+        "interests": [
+            "string"
+        ],
         "itinerary": [
             {
             "dayNumber": 1,
             "activities": [
                 {
-                "title": "",
-                "description": "",
+                "title": "string",
+                "description": "string",
                 "estimatedCost": 0
                 }
             ]
@@ -60,8 +82,32 @@ const generateTripPlan = async (tripDetails) => {
             "activities": 0,
             "transport": 0
         },
-        "hotels": [],
-        "packingList": []
+        "hotels": [
+            "Hotel Name 1",
+            "Hotel Name 2",
+            "Hotel Name 3",
+            "Hotel Name 4"
+        ],
+        "packingList": {
+            "crucialDocuments": [
+            {
+                "item": "Passport",
+                "checked": false
+            }
+            ],
+            "activityEquipment": [
+            {
+                "item": "Hiking Shoes",
+                "checked": false
+            }
+            ],
+            "climateWear": [
+            {
+                "item": "Rain Jacket",
+                "checked": false
+            }
+            ]
+        }
         }
         `;
 
@@ -98,8 +144,70 @@ const generateTripPlan = async (tripDetails) => {
     }
 };
 
+
+const regenerateTripDay = async ({
+    destination,
+    budgetTier,
+    interests,
+    dayNumber,
+}) => {
+
+    try {
+
+        const prompt = `
+Generate itinerary for ONLY day ${dayNumber}.
+
+Destination: ${destination}
+Budget: ${budgetTier}
+Interests: ${interests.join(", ")}
+
+Return ONLY JSON.
+
+{
+    "dayNumber": ${dayNumber},
+    "activities": [
+        {
+            "title": "",
+            "description": "",
+            "estimatedCost": 0
+        }
+    ]
+}
+`;
+
+        const response =
+            await ai.models.generateContent({
+                model: "gemini-2.5-flash",
+                contents: prompt,
+            });
+
+        const text = response.text.trim();
+
+        console.log("RAW TEXT:", text);
+
+        const cleanedResponse = text
+            .replace(/```json/g, "")
+            .replace(/```/g, "")
+            .trim();
+
+        console.log(cleanedResponse);
+
+        return JSON.parse(cleanedResponse);
+
+    } catch (error) {
+
+        console.error(
+            "REGENERATE DAY ERROR:",
+            error
+        );
+
+        throw error;
+    }
+};
+
 module.exports = {
     generateTripPlan,
+    regenerateTripDay
 };
 
 

@@ -202,8 +202,8 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTM2OWIzOTFmMGVmM2Y1NTAxMDhkODYiLCJpYXQiOjE3ODIwMDY0MTQsImV4cCI6MTc4MjYxMTIxNH0.2bl0puuLyhqyYYf7dT0g50g7_6z2SpfsdctF5RH-aRU
 
 {
-  "destination": "India",
-  "durationDays": 3,
+  "destination": "Pakisthan",
+  "durationDays": 2,
   "budgetTier": "Medium",
   "interests": [
     "Food",
@@ -213,3 +213,20 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTM2O
   ]
 }
 ####
+GET http://localhost:5000/api/trips/6a37cacd6c0e11628b7a5e21
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTM2OWIzOTFmMGVmM2Y1NTAxMDhkODYiLCJpYXQiOjE3ODIwMDY0MTQsImV4cCI6MTc4MjYxMTIxNH0.2bl0puuLyhqyYYf7dT0g50g7_6z2SpfsdctF5RH-aRU
+####
+
+PATCH /api/trips/:6a37cc90f15995ab6b10298f/day/3
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTM2OWIzOTFmMGVmM2Y1NTAxMDhkODYiLCJpYXQiOjE3ODIwMDY0MTQsImV4cCI6MTc4MjYxMTIxNH0.2bl0puuLyhqyYYf7dT0g50g7_6z2SpfsdctF5RH-aRU
+
+{
+  "activities": [
+    {
+      "title": "Disney Land",
+      "description": "Full day",
+      "estimatedCost": 100
+    }
+  ]
+}
