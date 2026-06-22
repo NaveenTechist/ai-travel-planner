@@ -570,7 +570,7 @@ const regenerateDay = async (
 
         console.error(
             "REGENERATE DAY ERROR:",
-            error
+            error?.message || error
         );
 
         if (error.status === 429) {
@@ -584,7 +584,7 @@ const regenerateDay = async (
         return res.status(500).json({
             success: false,
             message:
-                "Internal server error",
+                error?.message || "Internal server error",
         });
     }
 };

@@ -235,3 +235,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTM2O
 DELETE http://localhost:5000/api/trips/6a3742b8c6e8d1c8aa726b80
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTM3NDFlY2M2ZThkMWM4YWE3MjZiNzAiLCJpYXQiOjE3ODIxMTIyNjQsImV4cCI6MTc4MjcxNzA2NH0.OeTqYc85Rh5gbqEY8ePBlPevbXigVZRI_Mz3vG3-zz0
 ####
+
+GET https://ai-travel-planner-onbz.onrender.com/api/trips
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTM2OWIzOTFmMGVmM2Y1NTAxMDhkODYiLCJpYXQiOjE3ODIwMDY0MTQsImV4cCI6MTc4MjYxMTIxNH0.2bl0puuLyhqyYYf7dT0g50g7_6z2SpfsdctF5RH-aRU
+####

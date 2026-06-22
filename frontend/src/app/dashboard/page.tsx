@@ -23,7 +23,8 @@ import {
     Route,
     Backpack,
     PieChart,
-    Brain
+    Brain,
+    Trash2
 } from "lucide-react";
 
 const navItems = [
@@ -106,6 +107,25 @@ export default function DashboardPage() {
     const handleLogout = () => {
         localStorage.removeItem("token");
         router.push("/login");
+    };
+
+    const handleDeleteTrip = async (tripId: string) => {
+        const confirmed = window.confirm(
+            "Are you sure you want to delete this trip? This cannot be undone."
+        );
+        if (!confirmed) return;
+
+        try {
+            await api.delete(`/trips/${tripId}`);
+
+            if (selectedTripId === tripId) {
+                setSelectedTripId(null);
+            }
+
+            await fetchTrips();
+        } catch (error) {
+            console.error("Failed to delete trip", error);
+        }
     };
 
     const filteredTrips = trips.filter((trip) =>
@@ -491,13 +511,13 @@ export default function DashboardPage() {
                                             selectedTrip?._id === trip._id;
 
                                         return (
-                                            <button
+                                            <div
                                                 key={trip._id}
                                                 onClick={() =>
                                                     setSelectedTripId(trip._id)
                                                 }
                                                 className={[
-                                                    "w-full rounded-3xl border p-5 text-left transition-all duration-300",
+                                                    "group w-full rounded-3xl border p-5 text-left cursor-pointer transition-all duration-300",
                                                     active
                                                         ? "border-[#5E7CFF]/40 bg-[#5E7CFF]/10"
                                                         : "border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.05]",
@@ -522,8 +542,21 @@ export default function DashboardPage() {
 
                                                     </div>
 
-                                                    <div className="rounded-full bg-white/5 px-3 py-1 text-xs">
-                                                        {trip.interests?.length || 0}
+                                                    <div className="flex items-center gap-2">
+                                                        <div className="rounded-full bg-white/5 px-3 py-1 text-xs">
+                                                            {trip.interests?.length || 0}
+                                                        </div>
+
+                                                        <button
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleDeleteTrip(trip._id);
+                                                            }}
+                                                            className="h-8 w-8 flex items-center justify-center rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 transition opacity-0 group-hover:opacity-100"
+                                                            title="Delete Trip"
+                                                        >
+                                                            <Trash2 size={14} />
+                                                        </button>
                                                     </div>
 
                                                 </div>
@@ -543,7 +576,7 @@ export default function DashboardPage() {
 
                                                 </div>
 
-                                            </button>
+                                            </div>
                                         );
                                     })
                                 ) : (

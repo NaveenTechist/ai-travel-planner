@@ -7,10 +7,7 @@ import {
     PlusIcon,
 } from "@heroicons/react/24/outline";
 import { useState } from "react";
-
-interface ItineraryCardProps {
-    trip: Trip | null;
-}
+import api from "@/utils/api";
 
 interface ItineraryCardProps {
     trip: Trip | null;
@@ -19,6 +16,7 @@ interface ItineraryCardProps {
 
 export default function ItineraryCard({
     trip,
+    onTripUpdated,
 }: ItineraryCardProps) {
     if (!trip) {
         return (
@@ -32,8 +30,8 @@ export default function ItineraryCard({
 
     const lastDayNumber = trip?.itinerary?.[trip.itinerary.length - 1]?.dayNumber;
 
-    const [regeneratingDay, setRegeneratingDay] = useState(null);
-    const [deletingDay, setDeletingDay] = useState(null);
+    const [regeneratingDay, setRegeneratingDay] = useState<number | null>(null);
+    const [deletingDay, setDeletingDay] = useState<number | null>(null);
     const [showAddModal, setShowAddModal] = useState(false);
     const [selectedDay, setSelectedDay] = useState<number | null>(null);
 
@@ -108,52 +106,64 @@ export default function ItineraryCard({
     };
 
 
-    // const handleRegenerateDay = async (dayNumber) => {
-    //     const feedback = prompt(
-    //         "How would you like to change this day?"
-    //     );
+    const handleRegenerateDay = async (dayNumber: number) => {
+        const confirmed = window.confirm(
+            `Regenerate Day ${dayNumber} with AI? This will replace all activities for this day.`
+        );
 
-    //     if (!feedback) return;
+        if (!confirmed) return;
 
-    //     try {
-    //         setRegeneratingDay(dayNumber);
+        try {
+            setRegeneratingDay(dayNumber);
 
-    //         await regenerateDay(
-    //             trip._id,
-    //             dayNumber,
-    //             feedback
-    //         );
+            await api.patch(
+                `/trips/${trip._id}/regenerate-day/${dayNumber}`
+            );
 
-    //         await refreshTrip();
-    //     } catch (error) {
-    //         console.error(error);
-    //     } finally {
-    //         setRegeneratingDay(null);
-    //     }
-    // };
+            await onTripUpdated();
+        } catch (error: any) {
+            if (error?.response?.status === 429) {
+                alert("AI quota exceeded. Please try again later.");
+            } else {
+                console.error("Failed to regenerate day", error);
+                alert("Failed to regenerate day. Please try again.");
+            }
+        } finally {
+            setRegeneratingDay(null);
+        }
+    };
 
-    // const handleDeleteDay = async (dayNumber) => {
-    //     const confirmed = window.confirm(
-    //         `Delete Day ${ dayNumber } ? `
-    //     );
+    const handleDeleteDay = async (dayNumber: number) => {
+        const confirmed = window.confirm(
+            `Delete Day ${dayNumber}?`
+        );
 
-    //     if (!confirmed) return;
+        if (!confirmed) return;
 
-    //     try {
-    //         setDeletingDay(dayNumber);
+        try {
+            setDeletingDay(dayNumber);
 
-    //         await deleteDay(
-    //             trip._id,
-    //             dayNumber
-    //         );
+            const updatedItinerary = (trip.itinerary || [])
+                .filter((d) => d.dayNumber !== dayNumber)
+                .map((d, index) => ({
+                    ...d,
+                    dayNumber: index + 1,
+                }));
 
-    //         await refreshTrip();
-    //     } catch (error) {
-    //         console.error(error);
-    //     } finally {
-    //         setDeletingDay(null);
-    //     }
-    // };
+            const updatedDurationDays = updatedItinerary.length;
+
+            await api.put(`/trips/${trip._id}`, {
+                itinerary: updatedItinerary,
+                durationDays: updatedDurationDays,
+            });
+
+            await onTripUpdated();
+        } catch (error) {
+            console.error("Failed to delete day", error);
+        } finally {
+            setDeletingDay(null);
+        }
+    };
 
     // const handleAddActivity = (dayNumber) => {
     //     // open modal / drawer
@@ -188,12 +198,12 @@ export default function ItineraryCard({
                     "
                             >
                                 <button
-                                    // onClick={() =>
-                                    //     handleRegenerateDay(day.dayNumber)
-                                    // }
-                                    // disabled={
-                                    //     regeneratingDay === day.dayNumber
-                                    // }
+                                    onClick={() =>
+                                        handleRegenerateDay(day.dayNumber)
+                                    }
+                                    disabled={
+                                        regeneratingDay === day.dayNumber
+                                    }
                                     className="
                             h-8 w-8
                             flex items-center justify-center
@@ -202,10 +212,11 @@ export default function ItineraryCard({
                             hover:bg-indigo-500/20
                             text-indigo-300
                             transition
+                            disabled:opacity-50
                         "
                                     title="Regenerate Day"
                                 >
-                                    <ArrowPathIcon className="h-4 w-4" />
+                                    <ArrowPathIcon className={`h-4 w-4 ${regeneratingDay === day.dayNumber ? "animate-spin" : ""}`} />
                                 </button>
 
                                 <button
