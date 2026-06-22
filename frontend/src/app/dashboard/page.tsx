@@ -60,6 +60,7 @@ export default function DashboardPage() {
     const [showCreateTrip, setShowCreateTrip] = useState(false);
     const [commandOpen, setCommandOpen] = useState(false);
 
+
     const selectedTrip = useMemo(
         () => trips.find((trip) => trip._id === selectedTripId) || trips[0] || null,
         [trips, selectedTripId]
@@ -239,7 +240,7 @@ export default function DashboardPage() {
 
                                 <button
                                     onClick={() => setShowCreateTrip(true)}
-                                    className="flex items-center gap-2 rounded-lg bg-[#8B5CF6] px-5 py-3 text-sm font-medium text-white shadow-[0_12px_40px_rgba(139,92,246,0.4)] transition hover:scale-[1.02]"
+                                    className="flex items-center gap-2 rounded-lg bg-[#5E7CFF] px-5 py-3 text-sm font-medium text-white shadow-[0_12px_40px_rgba(139,92,246,0.4)] transition hover:scale-[1.02]"
                                 >
                                     <span>New Trip</span>
                                     <Plus size={16} />
@@ -578,7 +579,7 @@ export default function DashboardPage() {
                                 </div>
 
                                 <div className="mt-6">
-                                    <ItineraryCard trip={selectedTrip} />
+                                    <ItineraryCard trip={selectedTrip} onTripUpdated={fetchTrips} />
                                 </div>
 
                             </section>
