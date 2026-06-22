@@ -13,7 +13,7 @@ const {
     updateDay,
     updatePackingList,
     regenerateDay,
-
+    addActivity,
 } = require("../controllers/tripController");
 
 const {
@@ -32,6 +32,8 @@ router.get("/", auth, getTrips);
 router.get("/:tripId", auth, getTripById);
 
 router.post("/", auth, createTrip);
+router.post("/:tripId/activity", auth, addActivity);
+
 router.put("/:tripId", auth, updateTrip);
 
 router.patch("/:tripId/day/3", auth, updateDay);

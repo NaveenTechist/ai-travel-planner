@@ -79,6 +79,74 @@ const createTrip = async (req, res) => {
     }
 };
 
+const addActivity = async (req, res) => {
+    try {
+        const { tripId } = req.params;
+
+        const {
+            dayNumber,
+            title,
+            description,
+            estimatedCost,
+        } = req.body;
+
+        if (!title?.trim()) {
+            return res.status(400).json({
+                message: "Title required",
+            });
+        }
+
+        const trip = await Trip.findById(tripId);
+
+        if (!trip) {
+            return res.status(404).json({
+                message: "Trip not found",
+            });
+        }
+
+        console.log("Trip User ID:", trip.userId.toString());
+        console.log("Req User:", req.user);
+        console.log("Req User ID:", req.user.id);
+
+        if (
+            trip.userId.toString() !==
+            req.user.userId
+        ) {
+            return res.status(403).json({
+                message: "Unauthorized",
+            });
+        }
+
+        const day = trip.itinerary.find(
+            d => d.dayNumber === dayNumber
+        );
+
+        if (!day) {
+            return res.status(404).json({
+                message: "Day not found",
+            });
+        }
+
+        day.activities.push({
+            title,
+            description,
+            estimatedCost:
+                Number(estimatedCost) || 0,
+        });
+
+        await trip.save();
+
+        return res.json(trip);
+
+    } catch (error) {
+        console.error(error);
+
+        return res.status(500).json({
+            message: "Failed to add activity",
+        });
+    }
+};
+
 // GET CURRENT USER TRIPS
 const getTrips = async (req, res) => {
     console.log("=== GET TRIPS ===");
@@ -570,4 +638,5 @@ module.exports = {
     updateDay,
     updatePackingList,
     regenerateDay,
+    addActivity,
 };
