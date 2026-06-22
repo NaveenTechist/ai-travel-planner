@@ -38,14 +38,14 @@ export interface Trip {
     durationDays: number;
     budgetTier: 'Low' | 'Medium' | 'High';
     interests: string[];
-
     itinerary: ItineraryDay[];
-
     estimatedBudget: Budget;
-
     hotels: string[];
-
-    packingList: PackingList;
+    packingList?: {
+        item: string;
+        category: string;
+        isPacked: boolean;
+    }[];
 }
 
 export interface LoginData {

@@ -14,6 +14,7 @@ export default function CreateTripForm({
     const [budgetTier, setBudgetTier] = useState("Medium");
     const [interests, setInterests] = useState("");
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
 
     const handleSubmit = async (
         e: React.FormEvent<HTMLFormElement>
@@ -24,6 +25,24 @@ export default function CreateTripForm({
             setLoading(true);
 
             const token = localStorage.getItem("token");
+
+            setError("");
+
+            if (durationDays < 1) {
+                setError("Please enter at least 1 day");
+                setLoading(false);
+                return;
+            }
+
+            console.log("Submitting Trip:", {
+                destination,
+                durationDays,
+                budgetTier,
+                interests: interests
+                    .split(",")
+                    .map((item) => item.trim())
+                    .filter(Boolean),
+            });
 
             const res = await fetch(
                 `${process.env.NEXT_PUBLIC_API_URL}/api/trips/generate`,
@@ -110,6 +129,12 @@ export default function CreateTripForm({
                 onChange={(e) => setInterests(e.target.value)}
                 className="w-full p-3 rounded-lg bg-slate-950 border border-slate-700"
             />
+
+            {error && (
+                <div className="rounded-lg border border-red-500/20 bg-red-500/10 p-3 text-sm text-red-300">
+                    {error}
+                </div>
+            )}
 
             <button
                 type="submit"

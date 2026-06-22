@@ -1,7 +1,7 @@
 "use client";
 
 import api from "@/utils/api";
-import { useState } from "react";
+import { useState, useEffect, } from "react";
 
 interface PackingItem {
   _id?: string;
@@ -12,7 +12,13 @@ interface PackingItem {
 
 interface PackingListProps {
   tripId: string;
-  packingList: PackingItem[];
+  packingList:
+  | {
+    crucialDocuments?: any[];
+    activityEquipment?: any[];
+    climateWear?: any[];
+  }
+  | any[];
   onUpdate?: () => void;
 }
 
@@ -21,14 +27,40 @@ export default function PackingList({
   packingList,
   onUpdate,
 }: PackingListProps) {
-  const [items, setItems] = useState(packingList);
+
+
+  const [items, setItems] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (!packingList) return;
+
+    if (Array.isArray(packingList)) {
+      setItems(
+        packingList.map((item: any, index: number) =>
+          typeof item === "string"
+            ? {
+              _id: index.toString(),
+              item,
+              checked: false,
+            }
+            : item
+        )
+      );
+    } else {
+      setItems([
+        ...(packingList.crucialDocuments || []),
+        ...(packingList.activityEquipment || []),
+        ...(packingList.climateWear || []),
+      ]);
+    }
+  }, [packingList]);
 
   const togglePacked = async (itemId?: string) => {
     if (!itemId) return;
 
     const updatedItems = items.map((item) =>
       item._id === itemId
-        ? { ...item, isPacked: !item.isPacked }
+        ? { ...item, checked: !item.checked }
         : item
     );
 
@@ -45,6 +77,10 @@ export default function PackingList({
     }
   };
 
+  console.log("packingList", packingList);
+  console.log("isArray", Array.isArray(packingList));
+  console.log("items", items);
+
   return (
     <div className="rounded-[28px] border border-white/[0.07] bg-white/[0.03] p-6 backdrop-blur-2xl">
       <h2 className="text-xl font-semibold text-white mb-5">
@@ -60,17 +96,15 @@ export default function PackingList({
           >
             <input
               type="checkbox"
-              checked={item.isPacked}
+              checked={item.checked}
               readOnly
               className="h-4 w-4"
             />
-
             <span
-              className={`flex-1 ${
-                item.isPacked
-                  ? "line-through text-slate-500"
-                  : "text-white"
-              }`}
+              className={`flex-1 ${item.checked
+                ? "line-through text-slate-500"
+                : "text-white"
+                }`}
             >
               {item.item}
             </span>

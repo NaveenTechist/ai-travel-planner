@@ -7,6 +7,21 @@ import type { Trip } from "@/types";
 import CreateTripForm from "@/components/CreateTripForm";
 import ItineraryCard from "@/components/ItineraryCard";
 import PackingList from "@/components/PackingList";
+import BudgetCard from "@/components/BudgetCard";
+import {
+    Globe,
+    Search,
+    Plus,
+    LayoutDashboard,
+    CalendarDays,
+    Wallet,
+    Heart,
+    Library,
+    Route,
+    Backpack,
+    PieChart,
+    Brain
+} from "lucide-react";
 
 const navItems = [
     { label: "Dashboard", active: true },
@@ -110,373 +125,435 @@ export default function DashboardPage() {
     }
 
     return (
-        <main className="min-h-screen bg-[#0B1120] text-white">
-            <div className="flex min-h-screen">
-                {/* Sidebar */}
-                <aside className="hidden lg:flex w-[280px] flex-col border-r border-white/[0.06] bg-white/[0.02] backdrop-blur-2xl">
-                    <div className="p-6 border-b border-white/[0.06]">
-                        <div className="flex items-center gap-3">
-                            <div className="h-11 w-11 rounded-2xl bg-[#4169E1] shadow-[0_0_30px_rgba(65,105,225,0.35)]" />
-                            <div>
-                                <h1 className="text-lg font-semibold leading-none">AI Travel Planner</h1>
-                                <p className="text-xs text-slate-400 mt-1">Secure multi-user workspace</p>
-                            </div>
-                        </div>
-                    </div>
+        <main className="min-h-screen bg-[#070B14] text-white overflow-x-hidden">
+            {/* Background */}
+            <div className="fixed inset-0 pointer-events-none">
+                <div className="absolute top-0 left-1/2 h-[500px] w-[500px] -translate-x-1/2 rounded-full bg-[#5E7CFF]/20 blur-[140px]" />
+                <div className="absolute bottom-0 right-0 h-[400px] w-[400px] rounded-full bg-cyan-500/10 blur-[120px]" />
+            </div>
 
-                    <div className="p-4">
-                        <p className="px-3 pb-3 text-[11px] uppercase tracking-[0.22em] text-slate-500">
-                            Main Menu
-                        </p>
+            <section className="relative z-10">
+                {/* Header */}
+                <header className="sticky top-0 z-50 border-b border-white/[0.06] bg-[#070B14]/80 backdrop-blur-xl">
+                    <div className="mx-auto max-w-[1600px] px-5 lg:px-8">
+                        <div className="flex h-20 items-center justify-between">
 
-                        <nav className="space-y-2">
-                            {navItems.map((item) => (
-                                <button
-                                    key={item.label}
-                                    className={[
-                                        "w-full flex items-center justify-between rounded-2xl px-4 py-3 text-left transition",
-                                        item.active
-                                            ? "bg-[#4169E1]/14 border border-[#4169E1]/35 text-white shadow-[0_0_0_1px_rgba(65,105,225,0.08)]"
-                                            : "bg-white/[0.02] border border-white/[0.05] text-slate-400 hover:text-white hover:bg-white/[0.04]",
-                                    ].join(" ")}
-                                >
-                                    <span className="text-sm font-medium">{item.label}</span>
-                                    <span
-                                        className={[
-                                            "h-2 w-2 rounded-full",
-                                            item.active ? "bg-[#4169E1]" : "bg-white/15",
-                                        ].join(" ")}
-                                    />
-                                </button>
-                            ))}
-                        </nav>
-                    </div>
-                </aside>
-
-                {/* Main */}
-                <section className="flex-1">
-                    {/* Top bar */}
-                    <header className="sticky top-0 z-20 border-b border-white/[0.06] bg-[#0B1120]/85 backdrop-blur-2xl">
-                        <div className="flex items-center justify-between gap-4 px-5 py-4 lg:px-8">
-                            <div>
-                                <p className="text-xs uppercase tracking-[0.22em] text-slate-500">Dashboard</p>
-                                <h2 className="mt-1 text-xl lg:text-2xl font-semibold text-white">
-                                    Travel Command Center
-                                </h2>
+                            <div className="flex items-center gap-3">
+                                <Globe className="h-6 w-6 text-[#5E7CFF]" />
+                                <div>
+                                    <h1>Travel OS</h1>
+                                    <p>AI Travel Planner</p>
+                                </div>
                             </div>
 
                             <div className="hidden md:flex items-center gap-3">
+
                                 <div className="relative">
+                                    <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+
                                     <input
                                         value={query}
                                         onChange={(e) => setQuery(e.target.value)}
-                                        placeholder="Search trips..."
-                                        className="w-[320px] rounded-2xl border border-white/[0.08] bg-white/[0.03] px-4 py-3 text-sm text-white placeholder:text-slate-500 outline-none backdrop-blur-xl focus:border-[#4169E1]/60"
+                                        placeholder="Search destination..."
+                                        className="w-[320px] rounded-2xl border border-white/[0.08] bg-white/[0.04] py-3 pl-11 pr-16 text-sm outline-none backdrop-blur-xl focus:border-[#5E7CFF]"
                                     />
-                                    <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-slate-500 text-sm">
-                                        ⌘K
-                                    </div>
-                                </div>
 
-                                <button className="rounded-2xl border border-white/[0.08] bg-white/[0.03] px-4 py-3 text-sm text-slate-300 hover:text-white hover:border-[#4169E1]/40 transition">
-                                    Export
-                                </button>
+                                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-slate-500">
+                                        ⌘K
+                                    </span>
+                                </div>
 
                                 <button
                                     onClick={() => setShowCreateTrip(true)}
-                                    className="rounded-2xl bg-[#4169E1] px-4 py-3 text-sm font-medium text-white shadow-[0_0_30px_rgba(65,105,225,0.25)]"
+                                    className="flex items-center gap-2 rounded-2xl bg-[#5E7CFF] px-5 py-3 text-sm font-medium text-white shadow-[0_0_40px_rgba(94,124,255,0.35)] transition hover:scale-[1.02]"
                                 >
-                                    New Trip
+                                    <span>New Trip</span>
+                                    <Plus size={16} />
                                 </button>
                             </div>
                         </div>
-                    </header>
+                    </div>
+                </header>
 
-                    {showCreateTrip && (
-                        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
-                            <div className="relative w-full max-w-2xl mx-4">
-                                <button
-                                    onClick={() => setShowCreateTrip(false)}
-                                    className="absolute right-4 top-4 z-10 text-slate-400 hover:text-white"
-                                >
-                                    ✕
-                                </button>
+                {/* Modal */}
+                {showCreateTrip && (
+                    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-md">
+                        <div className="relative w-full max-w-2xl px-4">
+                            <button
+                                onClick={() => setShowCreateTrip(false)}
+                                className="absolute right-6 top-4 z-20 text-slate-400 hover:text-white"
+                            >
+                                ✕
+                            </button>
 
-                                <CreateTripForm
-                                    onTripCreated={async () => {
-                                        await fetchTrips();
-                                        setShowCreateTrip(false);
-                                    }}
-                                />
-                            </div>
+                            <CreateTripForm
+                                onTripCreated={async () => {
+                                    await fetchTrips();
+                                    setShowCreateTrip(false);
+                                }}
+                            />
                         </div>
-                    )}
+                    </div>
+                )}
 
-                    <div className="px-5 py-6 lg:px-8 lg:py-8 space-y-6">
-                        {/* Hero / Summary */}
-                        <div className="grid gap-6 xl:grid-cols-[1.35fr_0.85fr]">
-                            <section className="rounded-[28px] border border-white/[0.07] bg-white/[0.03] p-6 lg:p-8 backdrop-blur-2xl shadow-[0_20px_80px_rgba(0,0,0,0.25)]">
-                                <div className="flex flex-col gap-6">
-                                    <div className="flex items-start justify-between gap-4">
-                                        <div>
-                                            <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
-                                                Workspace Overview
-                                            </p>
-                                            <h3 className="mt-2 text-2xl lg:text-3xl font-semibold text-white">
-                                                Your AI travel operations panel
-                                            </h3>
-                                            <p className="mt-3 max-w-2xl text-sm lg:text-base text-slate-400 leading-7">
-                                                Secure trip generation, ownership-validated edits, AI itinerary workflows,
-                                                weather-aware packing, and future regeneration tools — all in one focused
-                                                dashboard.
-                                            </p>
-                                        </div>
+                <div className="mx-auto max-w-[1600px] px-5 py-6 lg:px-8">
 
-                                        <div className="hidden md:flex items-center gap-2 rounded-2xl border border-[#4169E1]/20 bg-[#4169E1]/10 px-4 py-3">
-                                            <span className="h-2.5 w-2.5 rounded-full bg-[#4169E1]" />
-                                            <span className="text-sm text-slate-200">System Ready</span>
-                                        </div>
-                                    </div>
+                    {/* HERO */}
+                    <section className="relative overflow-hidden rounded-[36px] border border-white/[0.08] bg-white/[0.04] p-8 backdrop-blur-2xl">
 
-                                    <div className="grid gap-4 md:grid-cols-3">
-                                        <div className="rounded-3xl border border-white/[0.06] bg-[#0F172A]/70 p-5">
-                                            <p className="text-sm text-slate-400">Trips</p>
-                                            <p className="mt-3 text-3xl font-semibold text-white">{totalTrips}</p>
-                                            <p className="mt-2 text-xs text-slate-500">User-owned documents</p>
-                                        </div>
+                        <div className="absolute inset-0 bg-gradient-to-br from-[#5E7CFF]/15 via-transparent to-cyan-500/10" />
 
-                                        <div className="rounded-3xl border border-white/[0.06] bg-[#0F172A]/70 p-5">
-                                            <p className="text-sm text-slate-400">Total Days</p>
-                                            <p className="mt-3 text-3xl font-semibold text-white">{totalDays}</p>
-                                            <p className="mt-2 text-xs text-slate-500">Across saved itineraries</p>
-                                        </div>
+                        <div className="relative">
 
-                                        <div className="rounded-3xl border border-white/[0.06] bg-[#0F172A]/70 p-5">
-                                            <p className="text-sm text-slate-400">Avg Budget</p>
-                                            <p className="mt-3 text-3xl font-semibold text-white">
-                                                {avgBudget ? `$${avgBudget.toLocaleString()}` : "$0"}
-                                            </p>
-                                            <p className="mt-2 text-xs text-slate-500">Calculated server-side</p>
+                            <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
+
+                                <div className="max-w-3xl">
+
+                                    <p className="text-xs uppercase tracking-[0.3em] text-slate-400">
+                                        Active Workspace
+                                    </p>
+
+                                    <h2 className="mt-4 text-4xl font-bold leading-tight lg:text-6xl">
+                                        {selectedTrip
+                                            ? selectedTrip.destination
+                                            : "Plan your next adventure"}
+                                    </h2>
+
+                                    <p className="mt-4 max-w-2xl text-slate-300">
+                                        AI-generated itineraries, weather-aware packing,
+                                        dynamic trip editing and intelligent budgeting in one place.
+                                    </p>
+
+                                    {selectedTrip && (
+                                        <div className="mt-8 flex flex-wrap gap-3">
+                                            <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm backdrop-blur-sm">
+                                                <CalendarDays size={16} />
+                                                <span>{selectedTrip.durationDays} Days</span>
+                                            </div>
+
+                                            <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm backdrop-blur-sm">
+                                                <Wallet size={16} />
+                                                <span>{selectedTrip.budgetTier}</span>
+                                            </div>
+
+                                            <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm backdrop-blur-sm">
+                                                <Heart size={16} />
+                                                <span>{selectedTrip.interests?.length || 0} Interests</span>
+                                            </div>
                                         </div>
-                                    </div>
+                                    )}
                                 </div>
-                            </section>
 
-                            <section className="rounded-[28px] border border-white/[0.07] bg-white/[0.03] p-6 backdrop-blur-2xl">
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
-                                            Selected Trip
+                                <div className="grid grid-cols-2 gap-4 lg:w-[420px]">
+
+                                    <div className="rounded-3xl border border-white/[0.08] bg-black/20 p-5">
+                                        <p className="text-xs uppercase tracking-wider text-slate-500">
+                                            Trips
                                         </p>
-                                        <h3 className="mt-2 text-2xl font-semibold text-white">
-                                            {selectedTrip ? (
-                                                <div className="mt-6 space-y-4">
-                                                    <div className="grid grid-cols-2 gap-3">
-                                                        <Metric
-                                                            label="Destination"
-                                                            value={selectedTrip.destination}
-                                                        />
 
-                                                        <Metric
-                                                            label="Duration"
-                                                            value={`${selectedTrip.durationDays} Days`}
-                                                        />
+                                        <h3 className="mt-3 text-4xl font-bold">
+                                            {totalTrips}
+                                        </h3>
+                                    </div>
 
-                                                        <Metric
-                                                            label="Budget"
-                                                            value={selectedTrip.budgetTier}
-                                                        />
+                                    <div className="rounded-3xl border border-white/[0.08] bg-black/20 p-5">
+                                        <p className="text-xs uppercase tracking-wider text-slate-500">
+                                            Days
+                                        </p>
 
-                                                        <Metric
-                                                            label="Estimated Cost"
-                                                            value={`$${selectedTrip.estimatedBudget?.total || 0}`}
-                                                        />
-                                                    </div>
+                                        <h3 className="mt-3 text-4xl font-bold">
+                                            {totalDays}
+                                        </h3>
+                                    </div>
 
-                                                    <div className="rounded-3xl border border-white/[0.06] bg-[#0F172A]/70 p-5">
-                                                        <p className="text-sm text-slate-400 mb-3">
-                                                            Interests
-                                                        </p>
+                                    <div className="rounded-3xl border border-white/[0.08] bg-black/20 p-5 col-span-2">
+                                        <p className="text-xs uppercase tracking-wider text-slate-500">
+                                            Average Budget
+                                        </p>
 
-                                                        <div className="flex flex-wrap gap-2">
-                                                            {selectedTrip.interests?.map((interest) => (
-                                                                <span
-                                                                    key={interest}
-                                                                    className="rounded-full bg-[#4169E1]/10 border border-[#4169E1]/20 px-3 py-1 text-xs text-[#C9D8FF]"
-                                                                >
-                                                                    {interest}
-                                                                </span>
-                                                            ))}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            ) : (
-                                                <div className="mt-8 text-center">
-                                                    <p className="text-slate-400">
-                                                        Create your first trip
-                                                    </p>
-                                                </div>
-                                            )}
+                                        <h3 className="mt-3 text-3xl font-bold">
+                                            ₹{avgBudget.toLocaleString()}
                                         </h3>
                                     </div>
                                 </div>
-
-                                {selectedTrip ? (
-                                    <div className="mt-6 space-y-4">
-                                        <div className="grid grid-cols-2 gap-3">
-                                            <Metric label="Duration" value={`${selectedTrip.durationDays} days`} />
-                                            <Metric label="Budget Tier" value={selectedTrip.budgetTier} />
-                                            <Metric
-                                                label="Budget Total"
-                                                value={`$${(selectedTrip.estimatedBudget?.total || 0).toLocaleString()}`}
-                                            />
-                                            <Metric label="Interests" value={selectedTrip.interests?.length?.toString() || "0"} />
-                                        </div>
-
-                                        <div className="rounded-3xl border border-white/[0.06] bg-[#0F172A]/70 p-5">
-                                            <p className="text-sm text-slate-400">Interests</p>
-                                            <div className="mt-3 flex flex-wrap gap-2">
-                                                {(selectedTrip.interests || []).map((item) => (
-                                                    <span
-                                                        key={item}
-                                                        className="rounded-full border border-[#4169E1]/20 bg-[#4169E1]/10 px-3 py-1 text-xs text-[#C9D8FF]"
-                                                    >
-                                                        {item}
-                                                    </span>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <div className="mt-8 rounded-3xl border border-dashed border-white/[0.10] bg-black/10 p-8 text-center">
-                                        <p className="text-lg font-medium text-white">No active trip yet</p>
-                                        <p className="mt-2 text-sm text-slate-400">
-                                            Create a trip to unlock itinerary editing, packing intelligence, and AI
-                                            regeneration.
-                                        </p>
-                                    </div>
-                                )}
-                            </section>
+                            </div>
                         </div>
+                    </section>
 
-                        {/* Lower grid */}
-                        <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
-                            {/* Trip list */}
-                            <section className="rounded-[28px] border border-white/[0.07] bg-white/[0.03] p-6 backdrop-blur-2xl">
-                                <div className="flex items-center justify-between gap-3">
-                                    <div>
-                                        <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
-                                            Saved Trips
-                                        </p>
-                                        <h3 className="mt-2 text-xl font-semibold text-white">Trip Library</h3>
-                                    </div>
+                    {/* TRIP STATUS */}
+                    <div className="mt-6 grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
 
-                                    <button className="rounded-2xl border border-white/[0.08] bg-white/[0.03] px-4 py-2 text-sm text-slate-300 hover:text-white hover:border-[#4169E1]/40 transition">
-                                        Filter
-                                    </button>
+                        <section className="rounded-[32px] border border-white/[0.08] bg-[#111214] p-6">
+
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-xs uppercase tracking-[0.25em] text-slate-500">
+                                        Selected Trip
+                                    </p>
+
+                                    <h3 className="mt-2 text-2xl font-semibold">
+                                        Overview
+                                    </h3>
                                 </div>
 
-                                <div className="mt-5 space-y-3">
-                                    {filteredTrips.length > 0 ? (
-                                        filteredTrips.map((trip) => {
-                                            const active = selectedTrip?._id === trip._id;
+                                <div className="rounded-full bg-emerald-500/10 px-4 py-2 text-xs text-emerald-400">
+                                    Ready
+                                </div>
+                            </div>
 
-                                            return (
-                                                <button
-                                                    key={trip._id}
-                                                    onClick={() => setSelectedTripId(trip._id)}
-                                                    className={[
-                                                        "w-full rounded-3xl border p-4 text-left transition",
-                                                        active
-                                                            ? "border-[#4169E1]/35 bg-[#4169E1]/10 shadow-[0_0_0_1px_rgba(65,105,225,0.10)]"
-                                                            : "border-white/[0.06] bg-black/10 hover:border-white/[0.12] hover:bg-white/[0.04]",
-                                                    ].join(" ")}
-                                                >
-                                                    <div className="flex items-start justify-between gap-3">
-                                                        <div>
-                                                            <p className="text-lg font-semibold text-white">
-                                                                {trip.destination}
-                                                            </p>
+                            {selectedTrip ? (
+                                <div className="mt-6 grid gap-4 md:grid-cols-2">
 
-                                                            <p className="text-sm text-slate-400">
-                                                                {trip.durationDays} Days
-                                                            </p>
+                                    <Metric
+                                        label="Destination"
+                                        value={selectedTrip.destination}
+                                    />
 
-                                                            <p className="text-sm text-slate-400">
-                                                                {trip.budgetTier} Budget
-                                                            </p>
-                                                        </div>
+                                    <Metric
+                                        label="Duration"
+                                        value={`${selectedTrip.durationDays} Days`}
+                                    />
 
-                                                        <div className="rounded-full border border-white/[0.08] bg-white/[0.03] px-3 py-1 text-[11px] text-slate-300">
-                                                            {trip.interests?.length || 0} interests
-                                                        </div>
+                                    <Metric
+                                        label="Budget Tier"
+                                        value={selectedTrip.budgetTier}
+                                    />
+
+                                    <Metric
+                                        label="Estimated Cost"
+                                        value={`₹${(
+                                            selectedTrip.estimatedBudget?.total || 0
+                                        ).toLocaleString()}`}
+                                    />
+                                </div>
+                            ) : null}
+                        </section>
+                        <section className="rounded-[32px] border border-white/[0.08] bg-[#111214] p-6">
+                            <p className="text-xs uppercase tracking-[0.25em] text-slate-500">
+                                Trip Readiness
+                            </p>
+
+                            <h3 className="mt-2 text-2xl font-semibold">
+                                AI Status
+                            </h3>
+
+                            <div className="mt-6 space-y-4">
+
+                                <div className="flex items-center justify-between rounded-2xl border border-white/[0.06] p-4">
+                                    <span>Itinerary Generated</span>
+                                    <span className="text-emerald-400">✓</span>
+                                </div>
+
+                                <div className="flex items-center justify-between rounded-2xl border border-white/[0.06] p-4">
+                                    <span>Budget Estimated</span>
+                                    <span className="text-emerald-400">✓</span>
+                                </div>
+
+                                <div className="flex items-center justify-between rounded-2xl border border-white/[0.06] p-4">
+                                    <span>Packing Assistant</span>
+                                    <span className="text-cyan-400">
+                                        {(selectedTrip?.packingList?.length ?? 0)} Items
+                                    </span>
+                                </div>
+
+                                <div className="flex items-center justify-between rounded-2xl border border-white/[0.06] p-4">
+                                    <span>AI Ready</span>
+                                    <span className="text-[#5E7CFF]">
+                                        Active
+                                    </span>
+                                </div>
+
+                            </div>
+                        </section>
+
+                    </div>
+
+                    {/* Main Grid */}
+
+                    <div className="mt-6 grid gap-6 xl:grid-cols-[380px_1fr]">
+
+                        {/* Trip Library */}
+
+                        <section className="rounded-[32px] border border-white/[0.08] bg-[#111214] p-6">
+
+                            <div className="flex items-center justify-between">
+
+                                <div>
+                                    <p className="text-xs uppercase tracking-[0.25em] text-slate-500">
+                                        Saved Trips
+                                    </p>
+
+                                    <h3 className="mt-2 text-2xl font-semibold">
+                                        Library
+                                    </h3>
+                                </div>
+
+                                <div className="rounded-full bg-[#5E7CFF]/10 px-3 py-1 text-xs text-[#5E7CFF]">
+                                    {filteredTrips.length}
+                                </div>
+
+                            </div>
+
+                            <div className="mt-6 space-y-3">
+
+                                {filteredTrips.length > 0 ? (
+                                    filteredTrips.map((trip) => {
+
+                                        const active =
+                                            selectedTrip?._id === trip._id;
+
+                                        return (
+                                            <button
+                                                key={trip._id}
+                                                onClick={() =>
+                                                    setSelectedTripId(trip._id)
+                                                }
+                                                className={[
+                                                    "w-full rounded-3xl border p-5 text-left transition-all duration-300",
+                                                    active
+                                                        ? "border-[#5E7CFF]/40 bg-[#5E7CFF]/10"
+                                                        : "border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.05]",
+                                                ].join(" ")}
+                                            >
+
+                                                <div className="flex items-start justify-between">
+
+                                                    <div>
+
+                                                        <h4 className="text-lg font-semibold">
+                                                            {trip.destination}
+                                                        </h4>
+
+                                                        <p className="mt-1 text-sm text-slate-400">
+                                                            {trip.durationDays} Days
+                                                        </p>
+
+                                                        <p className="text-sm text-slate-500">
+                                                            {trip.budgetTier} Budget
+                                                        </p>
+
                                                     </div>
 
-                                                    <div className="mt-4 flex flex-wrap gap-2">
-                                                        {(trip.interests || []).slice(0, 3).map((interest) => (
+                                                    <div className="rounded-full bg-white/5 px-3 py-1 text-xs">
+                                                        {trip.interests?.length || 0}
+                                                    </div>
+
+                                                </div>
+
+                                                <div className="mt-4 flex flex-wrap gap-2">
+
+                                                    {(trip.interests || [])
+                                                        .slice(0, 3)
+                                                        .map((interest) => (
                                                             <span
                                                                 key={interest}
-                                                                className="rounded-full border border-white/[0.06] bg-white/[0.03] px-2.5 py-1 text-[11px] text-slate-400"
+                                                                className="rounded-full border border-white/[0.06] bg-white/[0.04] px-3 py-1 text-[11px] text-slate-300"
                                                             >
                                                                 {interest}
                                                             </span>
                                                         ))}
-                                                    </div>
-                                                </button>
-                                            );
-                                        })
-                                    ) : (
-                                        <div className="rounded-3xl border border-dashed border-white/[0.10] bg-black/10 p-6 text-center">
-                                            <p className="text-sm text-slate-400">No trips found</p>
-                                        </div>
-                                    )}
+
+                                                </div>
+
+                                            </button>
+                                        );
+                                    })
+                                ) : (
+                                    <div className="rounded-3xl border border-dashed border-white/[0.08] p-8 text-center">
+                                        <p className="text-slate-400">
+                                            No trips found
+                                        </p>
+                                    </div>
+                                )}
+
+                            </div>
+                        </section>
+
+                        {/* Workspace */}
+
+                        <div className="space-y-6">
+
+                            <section className="rounded-[32px] border border-white/[0.08] bg-[#111214] p-6">
+
+                                <div className="flex items-center justify-between">
+
+                                    <div>
+                                        <p className="text-xs uppercase tracking-[0.25em] text-slate-500">
+                                            AI Itinerary
+                                        </p>
+
+                                        <h3 className="mt-2 text-2xl font-semibold">
+                                            Travel Timeline
+                                        </h3>
+                                    </div>
+
                                 </div>
+
+                                <div className="mt-6">
+                                    <ItineraryCard trip={selectedTrip} />
+                                </div>
+
                             </section>
 
-                            <div className="rounded-[28px] border border-white/[0.07] bg-white/[0.03] p-6 backdrop-blur-2xl">
-                                <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
-                                    Travel Summary
-                                </p>
-
-                                <h3 className="mt-2 text-xl font-semibold text-white">
-                                    Your Travel Insights
-                                </h3>
-
-                                <div className="mt-5 grid gap-4">
-                                    <div className="rounded-2xl border border-white/[0.06] p-4">
-                                        ✈️ {totalTrips} Trips Planned
-                                    </div>
-
-                                    <div className="rounded-2xl border border-white/[0.06] p-4">
-                                        🗓 {totalDays} Travel Days
-                                    </div>
-
-                                    <div className="rounded-2xl border border-white/[0.06] p-4">
-                                        💰 Average Budget ${avgBudget}
-                                    </div>
-                                </div>
-                            </div>
-                            <ItineraryCard trip={selectedTrip} />
                             {selectedTrip && (
-                                <PackingList
-                                    tripId={selectedTrip._id}
-                                    packingList={selectedTrip.packingList || []}
-                                    onUpdate={fetchTrips}
-                                />
+                                <section className="rounded-[32px] border border-white/[0.08] bg-[#111214] p-6">
+
+                                    <div className="mb-5">
+                                        <p className="text-xs uppercase tracking-[0.25em] text-slate-500">
+                                            Packing Assistant
+                                        </p>
+
+                                        <h3 className="mt-2 text-2xl font-semibold">
+                                            Weather Aware Packing
+                                        </h3>
+                                    </div>
+
+                                    <PackingList
+                                        tripId={selectedTrip._id}
+                                        packingList={
+                                            selectedTrip.packingList || []
+                                        }
+                                        onUpdate={fetchTrips}
+                                    />
+
+                                </section>
                             )}
+
+                            {selectedTrip && (
+                                <section className="rounded-[32px] border border-white/[0.08] bg-[#111214] p-6">
+
+                                    <div className="mb-5">
+                                        <p className="text-xs uppercase tracking-[0.25em] text-slate-500">
+                                            Budget Intelligence
+                                        </p>
+
+                                        <h3 className="mt-2 text-2xl font-semibold">
+                                            Cost Breakdown
+                                        </h3>
+                                    </div>
+
+                                    <BudgetCard
+                                        budget={selectedTrip.estimatedBudget}
+                                    />
+
+                                </section>
+                            )}
+
                         </div>
+
                     </div>
-                </section>
-            </div>
+
+                </div>
+            </section>
         </main>
     );
-}
 
-function Metric({ label, value }: { label: string; value: string }) {
-    return (
-        <div className="rounded-3xl border border-white/[0.06] bg-[#0F172A]/70 p-4">
-            <p className="text-xs uppercase tracking-[0.18em] text-slate-500">{label}</p>
-            <p className="mt-2 text-sm font-semibold text-white leading-6">{value}</p>
-        </div>
-    );
+    function Metric({ label, value }: { label: string; value: string }) {
+        return (
+            <div className="rounded-3xl border border-white/[0.06] bg-[#0F172A]/70 p-4">
+                <p className="text-xs uppercase tracking-[0.18em] text-slate-500">{label}</p>
+                <p className="mt-2 text-sm font-semibold text-white leading-6">{value}</p>
+            </div>
+        );
+    }
 }
