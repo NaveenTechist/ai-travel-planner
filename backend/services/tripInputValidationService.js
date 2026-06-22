@@ -13,6 +13,10 @@ const validateTripInput = (data) => {
         throw new Error("Duration must be number");
     }
 
+    if (data.durationDays < 1) {
+        throw new Error("Duration must be at least 1 day");
+    }
+
     if (!["Low", "Medium", "High"].includes(data.budgetTier)) {
         throw new Error("Invalid budget tier");
     }

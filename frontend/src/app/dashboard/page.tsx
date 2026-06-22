@@ -8,9 +8,12 @@ import CreateTripForm from "@/components/CreateTripForm";
 import ItineraryCard from "@/components/ItineraryCard";
 import PackingList from "@/components/PackingList";
 import BudgetCard from "@/components/BudgetCard";
+import { GrLocationPin } from "react-icons/gr";
 import {
     Globe,
     Search,
+    ArrowRight,
+    MapPinned,
     Plus,
     LayoutDashboard,
     CalendarDays,
@@ -55,6 +58,7 @@ export default function DashboardPage() {
     const [loading, setLoading] = useState(true);
     const [query, setQuery] = useState("");
     const [showCreateTrip, setShowCreateTrip] = useState(false);
+    const [commandOpen, setCommandOpen] = useState(false);
 
     const selectedTrip = useMemo(
         () => trips.find((trip) => trip._id === selectedTripId) || trips[0] || null,
@@ -96,6 +100,11 @@ export default function DashboardPage() {
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        router.push("/login");
     };
 
     const filteredTrips = trips.filter((trip) =>
@@ -148,27 +157,98 @@ export default function DashboardPage() {
 
                             <div className="hidden md:flex items-center gap-3">
 
-                                <div className="relative">
-                                    <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+                                <div
+                                    onClick={() => setCommandOpen(true)}
+                                    className="flex cursor-pointer items-center justify-between rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3"
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <Search size={18} />
+                                        <span className="text-slate-400">
+                                            Search trips...
+                                        </span>
+                                    </div>
 
-                                    <input
-                                        value={query}
-                                        onChange={(e) => setQuery(e.target.value)}
-                                        placeholder="Search destination..."
-                                        className="w-[320px] rounded-2xl border border-white/[0.08] bg-white/[0.04] py-3 pl-11 pr-16 text-sm outline-none backdrop-blur-xl focus:border-[#5E7CFF]"
-                                    />
-
-                                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-slate-500">
+                                    <kbd className="rounded bg-white/5 px-2 py-1 text-xs">
                                         ⌘K
-                                    </span>
+                                    </kbd>
                                 </div>
+                                {commandOpen && (
+                                    <div className="fixed inset-0 z-[999] bg-black/60 backdrop-blur-md">
+
+                                        <div className="mx-auto mt-24 max-w-2xl">
+
+                                            <div className="overflow-hidden rounded-[28px] border border-white/10 bg-[#111214] shadow-2xl">
+
+                                                <div className="border-b border-white/10 p-4">
+
+                                                    <input
+                                                        autoFocus
+                                                        value={query}
+                                                        onChange={(e) => setQuery(e.target.value)}
+                                                        placeholder="Search trips..."
+                                                        className="w-full bg-transparent text-lg outline-none"
+                                                    />
+
+                                                </div>
+
+                                                <div className="max-h-[500px] overflow-y-auto p-3">
+
+                                                    {filteredTrips.map((trip) => (
+
+                                                        <button
+                                                            key={trip._id}
+                                                            onClick={() => {
+                                                                setSelectedTripId(trip._id);
+                                                                setCommandOpen(false);
+                                                            }}
+                                                            className="mb-2 flex w-full items-center justify-between rounded-2xl border border-white/5 p-4 hover:border-[#5E7CFF]/30 hover:bg-[#5E7CFF]/10"
+                                                        >
+                                                            <div>
+
+                                                                <div className="flex items-center gap-2">
+                                                                    <GrLocationPin
+                                                                        size={16}
+                                                                        className="text-red-500 text-lg"
+                                                                    />
+
+                                                                    <h4 className="font-semibold">
+                                                                        {trip.destination}
+                                                                    </h4>
+                                                                </div>
+
+                                                                <p className="text-sm text-slate-400">
+                                                                    {trip.durationDays} Days • {trip.budgetTier}
+                                                                </p>
+
+                                                            </div>
+
+                                                            <ArrowRight size={18} />
+
+                                                        </button>
+
+                                                    ))}
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                )}
 
                                 <button
                                     onClick={() => setShowCreateTrip(true)}
-                                    className="flex items-center gap-2 rounded-2xl bg-[#5E7CFF] px-5 py-3 text-sm font-medium text-white shadow-[0_0_40px_rgba(94,124,255,0.35)] transition hover:scale-[1.02]"
+                                    className="flex items-center gap-2 rounded-lg bg-[#8B5CF6] px-5 py-3 text-sm font-medium text-white shadow-[0_12px_40px_rgba(139,92,246,0.4)] transition hover:scale-[1.02]"
                                 >
                                     <span>New Trip</span>
                                     <Plus size={16} />
+                                </button>
+                                <button
+                                    onClick={handleLogout}
+                                    className="rounded-2xl border border-red-500/20 bg-red-500/10 px-4 py-2 text-sm font-medium text-red-300 transition hover:bg-red-500/20"
+                                >
+                                    Logout
                                 </button>
                             </div>
                         </div>
@@ -291,9 +371,12 @@ export default function DashboardPage() {
                                         Selected Trip
                                     </p>
 
-                                    <h3 className="mt-2 text-2xl font-semibold">
-                                        Overview
-                                    </h3>
+                                    <div className="flex items-center gap-2 mt-3">
+                                        <LayoutDashboard className="h-6 w-6 text-[#5E7CFF]" />
+                                        <h3 className="mt-2 text-2xl font-semibold">
+                                            Overview
+                                        </h3>
+                                    </div>
                                 </div>
 
                                 <div className="rounded-full bg-emerald-500/10 px-4 py-2 text-xs text-emerald-400">
@@ -333,9 +416,12 @@ export default function DashboardPage() {
                                 Trip Readiness
                             </p>
 
-                            <h3 className="mt-2 text-2xl font-semibold">
-                                AI Status
-                            </h3>
+                            <div className="flex items-center gap-2 mt-3">
+                                <Brain className="h-7 w-7 text-[#5E7CFF]" />
+                                <h3 className="mt-2 text-2xl font-semibold">
+                                    AI Status
+                                </h3>
+                            </div>
 
                             <div className="mt-6 space-y-4">
 
@@ -383,9 +469,10 @@ export default function DashboardPage() {
                                         Saved Trips
                                     </p>
 
-                                    <h3 className="mt-2 text-2xl font-semibold">
-                                        Library
-                                    </h3>
+                                    <div className="flex items-center gap-2 mt-3">
+                                        <Library className="h-7 w-7 text-[#5E7CFF]" />
+                                        <h3 className="text-2xl font-semibold">Library</h3>
+                                    </div>
                                 </div>
 
                                 <div className="rounded-full bg-[#5E7CFF]/10 px-3 py-1 text-xs text-[#5E7CFF]">
@@ -482,9 +569,10 @@ export default function DashboardPage() {
                                             AI Itinerary
                                         </p>
 
-                                        <h3 className="mt-2 text-2xl font-semibold">
-                                            Travel Timeline
-                                        </h3>
+                                        <div className="flex items-center gap-2 mt-3">
+                                            <Route className="h-7 w-7 text-[#5E7CFF]" />
+                                            <h3 className="text-2xl font-semibold">Travel Timeline</h3>
+                                        </div>
                                     </div>
 
                                 </div>
@@ -503,9 +591,10 @@ export default function DashboardPage() {
                                             Packing Assistant
                                         </p>
 
-                                        <h3 className="mt-2 text-2xl font-semibold">
-                                            Weather Aware Packing
-                                        </h3>
+                                        <div className="flex items-center gap-2 mt-3">
+                                            <Backpack className="h-7 w-7 text-[#5E7CFF]" />
+                                            <h3 className="text-2xl font-semibold">Weather Aware Packing</h3>
+                                        </div>
                                     </div>
 
                                     <PackingList
@@ -527,9 +616,10 @@ export default function DashboardPage() {
                                             Budget Intelligence
                                         </p>
 
-                                        <h3 className="mt-2 text-2xl font-semibold">
-                                            Cost Breakdown
-                                        </h3>
+                                        <div className="flex items-center gap-2 mt-3">
+                                            <PieChart className="h-7 w-7 text-[#5E7CFF]" />
+                                            <h3 className="text-2xl font-semibold">Cost Breakdown</h3>
+                                        </div>
                                     </div>
 
                                     <BudgetCard

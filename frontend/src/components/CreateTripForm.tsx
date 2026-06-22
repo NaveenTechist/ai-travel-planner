@@ -1,6 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import {
+    MapPinned,
+    CalendarDays,
+    Wallet,
+    Heart,
+    Sparkles,
+} from "lucide-react";
 
 interface CreateTripFormProps {
     onTripCreated: () => Promise<void>;
@@ -85,64 +92,119 @@ export default function CreateTripForm({
     return (
         <form
             onSubmit={handleSubmit}
-            className="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4"
+            className="rounded-[32px] border border-white/[0.08] bg-[#111214] p-8 backdrop-blur-xl shadow-[0_20px_80px_rgba(0,0,0,0.35)]"
         >
-            <h2 className="text-xl font-bold">
-                Create New Trip
-            </h2>
+            <div className="mb-8">
+                <p className="text-xs uppercase tracking-[0.25em] text-slate-500">
+                    AI Travel Planner
+                </p>
 
-            <input
-                type="text"
-                placeholder="Destination"
-                value={destination}
-                onChange={(e) => setDestination(e.target.value)}
-                required
-                className="w-full p-3 rounded-lg bg-slate-950 border border-slate-700"
-            />
+                <h2 className="mt-2 text-3xl font-bold text-white">
+                    Create New Trip
+                </h2>
 
-            <input
-                type="number"
-                min={1}
-                placeholder="Duration (Days)"
-                value={durationDays}
-                onChange={(e) =>
-                    setDurationDays(Number(e.target.value))
-                }
-                required
-                className="w-full p-3 rounded-lg bg-slate-950 border border-slate-700"
-            />
+                <p className="mt-2 text-sm text-slate-400">
+                    Generate a personalized itinerary, packing list and budget plan.
+                </p>
+            </div>
 
-            <select
-                value={budgetTier}
-                onChange={(e) => setBudgetTier(e.target.value)}
-                className="w-full p-3 rounded-lg bg-slate-950 border border-slate-700"
-            >
-                <option value="Low">Low Budget</option>
-                <option value="Medium">Medium Budget</option>
-                <option value="High">High Budget</option>
-            </select>
+            <div className="space-y-5">
 
-            <input
-                type="text"
-                placeholder="Interests (food, hiking, museums)"
-                value={interests}
-                onChange={(e) => setInterests(e.target.value)}
-                className="w-full p-3 rounded-lg bg-slate-950 border border-slate-700"
-            />
+                <div>
+                    <label className="mb-2 flex items-center gap-2 text-sm font-medium text-slate-300">
+                        <MapPinned size={16} />
+                        Destination
+                    </label>
 
-            {error && (
-                <div className="rounded-lg border border-red-500/20 bg-red-500/10 p-3 text-sm text-red-300">
-                    {error}
+                    <input
+                        type="text"
+                        placeholder="Tokyo, Japan"
+                        value={destination}
+                        onChange={(e) => setDestination(e.target.value)}
+                        required
+                        className="w-full rounded-2xl border border-white/[0.08] bg-white/[0.03] px-4 py-4 text-white placeholder:text-slate-500 outline-none transition focus:border-[#5E7CFF] focus:bg-white/[0.05]"
+                    />
                 </div>
-            )}
 
-            <button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-indigo-600 hover:bg-indigo-500 py-3 rounded-lg font-semibold"
-            >
-                {loading ? "Generating..." : "Generate Trip"}
-            </button>
+                <div>
+                    <label className="mb-2 flex items-center gap-2 text-sm font-medium text-slate-300">
+                        <CalendarDays size={16} />
+                        Duration (Days)
+                    </label>
+
+                    <input
+                        type="number"
+                        min={1}
+                        placeholder="7"
+                        value={durationDays}
+                        onChange={(e) =>
+                            setDurationDays(Number(e.target.value))
+                        }
+                        required
+                        className="w-full rounded-2xl border border-white/[0.08] bg-white/[0.03] px-4 py-4 text-white placeholder:text-slate-500 outline-none transition focus:border-[#5E7CFF] focus:bg-white/[0.05]"
+                    />
+                </div>
+
+                <div>
+                    <label className="mb-2 flex items-center gap-2 text-sm font-medium text-slate-300">
+                        <Wallet size={16} />
+                        Budget Tier
+                    </label>
+
+                    <select
+                        value={budgetTier}
+                        onChange={(e) => setBudgetTier(e.target.value)}
+                        className="w-full rounded-2xl border border-white/[0.08] bg-white/[0.03] px-4 py-4 text-white outline-none transition focus:border-[#5E7CFF]"
+                    >
+                        <option className="bg-[#111214]" value="Low">
+                            Low Budget
+                        </option>
+
+                        <option className="bg-[#111214]" value="Medium">
+                            Medium Budget
+                        </option>
+
+                        <option className="bg-[#111214]" value="High">
+                            High Budget
+                        </option>
+                    </select>
+                </div>
+
+                <div>
+                    <label className="mb-2 flex items-center gap-2 text-sm font-medium text-slate-300">
+                        <Heart size={16} />
+                        Interests
+                    </label>
+
+                    <input
+                        type="text"
+                        placeholder="Food, Hiking, Museums, Beaches..."
+                        value={interests}
+                        onChange={(e) => setInterests(e.target.value)}
+                        className="w-full rounded-2xl border border-white/[0.08] bg-white/[0.03] px-4 py-4 text-white placeholder:text-slate-500 outline-none transition focus:border-[#5E7CFF] focus:bg-white/[0.05]"
+                    />
+                </div>
+
+                {error && (
+                    <div className="rounded-2xl border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-300">
+                        {error}
+                    </div>
+                )}
+
+                <button
+                    type="submit"
+                    disabled={loading}
+                    className="group relative mt-4 w-full overflow-hidden rounded-2xl bg-[#5E7CFF] py-4 font-semibold text-white transition-all duration-300 hover:scale-[1.01] hover:shadow-[0_0_40px_rgba(94,124,255,0.45)] disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                    <span className="relative z-10">
+                        {loading
+                            ? "Generating AI Trip..."
+                            : "Generate Trip"}
+                    </span>
+
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#5E7CFF] via-[#6F8DFF] to-[#5E7CFF] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                </button>
+            </div>
         </form>
     );
 }
