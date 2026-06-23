@@ -8,17 +8,13 @@ An AI-powered travel planning application that generates personalized travel iti
 
 ### Homepage
 
-![Homepage](./screenshots/homepage.png)
-
-> Replace with your homepage screenshot path.
+![Homepage](./frontend/images/img-1.png)
 
 ---
 
 ### Dashboard
 
-![Dashboard](./screenshots/dashboard.png)
-
-> Replace with your dashboard screenshot path.
+![Dashboard](./frontend/images/img-2.png)
 
 ---
 
@@ -418,4 +414,10 @@ https://github.com/NaveenTechist
 This project uses Generative AI (Google Gemini). AI-generated recommendations may occasionally contain inaccuracies. Users should verify important travel information before making bookings or travel decisions.
 
 ---
+
+Try:
+User Name: firstuser@gmail.com
+Password: 123456
+
+Please don't use AI overuse becuase we don't have that much credits.
 

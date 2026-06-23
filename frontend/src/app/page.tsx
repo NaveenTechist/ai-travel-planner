@@ -1,5 +1,7 @@
 'use client';
 
+import "../app/globals.css";
+
 import Link from 'next/link';
 import {
   Globe,
@@ -11,17 +13,17 @@ import {
   ArrowRight
 } from 'lucide-react';
 
-import { DM_Serif_Display } from "next/font/google";
+import { Manrope } from "next/font/google";
+import { motion } from "framer-motion";
 
-const dmSerif = DM_Serif_Display({
+const manrope = Manrope({
   subsets: ["latin"],
-  weight: "400",
 });
 
 export default function HomePage() {
   return (
     <main
-      className={`${dmSerif.className} min-h-screen bg-slate-950 text-white`}
+      className={`${manrope.className} min-h-screen bg-slate-950 text-white`}
     >
       {/* Background Glow */} <div className="absolute inset-0 overflow-hidden pointer-events-none"> <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[700px] h-[700px] bg-blue-600/10 blur-[140px] rounded-full" /> </div>
 
@@ -63,40 +65,82 @@ export default function HomePage() {
       </nav>
 
       {/* Hero */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 pt-24 pb-20 text-center">
+      {/* Hero */}
+      <section className="relative z-10 max-w-6xl mx-auto px-6 pt-24 pb-24 text-center -mt-25">
 
-        <div className="inline-flex items-center gap-2 border border-slate-800 rounded-full px-4 py-2 text-sm text-slate-400 mb-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="inline-flex items-center gap-2 border border-slate-800 rounded-full px-4 py-2 text-sm text-slate-400 mb-10"
+        >
           <Brain className="h-4 w-4" />
           AI Powered Travel Planning
-        </div>
+        </motion.div>
 
-        <h1
-          className={`${dmSerif.className}
-  text-6xl md:text-7xl leading-[1.05] tracking-tight`}
+        <motion.h1
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9 }}
+          className="
+      max-w-5xl
+      mx-auto
+      text-5xl
+      md:text-7xl
+      font-medium
+      tracking-[-0.04em]
+      leading-[1]
+      text-white
+      font-ravex
+    "
         >
           Plan Your Next
-          <span className="block text-blue-400">
+
+          <span className="block mt-3 text-blue-400 font-semibold">
             Adventure With AI
           </span>
-        </h1>
+        </motion.h1>
 
-        {/* <h1 className="text-6xl md:text-7xl font-bold leading-tight max-w-5xl mx-auto">
-          Plan your next adventure
-          <span className="block text-blue-400">
-            in seconds with AI
-          </span>
-        </h1> */}
-
-        <p className="max-w-3xl mx-auto mt-8 text-xl text-slate-400">
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+          className="
+      max-w-2xl
+      mx-auto
+      mt-8
+      text-lg
+      leading-8
+      text-slate-400
+    "
+        >
           Generate personalized itineraries, estimate travel budgets,
-          discover hotels, organize activities, and prepare smart packing
-          lists powered by Gemini AI.
-        </p>
+          discover hotels, organize activities, and prepare smart
+          packing lists powered by Gemini AI.
+        </motion.p>
 
-        <div className="flex flex-col sm:flex-row gap-4 justify-center mt-10">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4 }}
+          className="flex flex-col sm:flex-row gap-4 justify-center mt-12"
+        >
           <Link
             href="/register"
-            className="bg-blue-600 hover:bg-blue-500 px-8 py-4 rounded-2xl font-semibold flex items-center justify-center gap-2"
+            className="
+        bg-blue-600
+        hover:bg-blue-500
+        px-8
+        py-4
+        rounded-2xl
+        font-medium
+        flex
+        items-center
+        justify-center
+        gap-2
+        shadow-lg
+        shadow-blue-500/20
+      "
           >
             Start Planning
             <ArrowRight className="h-4 w-4" />
@@ -104,11 +148,40 @@ export default function HomePage() {
 
           <Link
             href="/login"
-            className="border border-slate-700 hover:bg-slate-900 px-8 py-4 rounded-2xl font-semibold"
+            className="
+        border
+        border-slate-700
+        hover:border-slate-600
+        hover:bg-slate-900
+        px-8
+        py-4
+        rounded-2xl
+        font-medium
+      "
           >
             Open Dashboard
           </Link>
-        </div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
+          className="
+      mt-14
+      flex
+      flex-wrap
+      justify-center
+      gap-8
+      text-sm
+      text-slate-500
+    "
+        >
+          <span>✦ Personalized Itineraries</span>
+          <span>✦ Smart Budget Planning</span>
+          <span>✦ AI Packing Assistant</span>
+        </motion.div>
+
       </section>
 
       {/* Features */}
@@ -177,7 +250,22 @@ export default function HomePage() {
         <div className="grid md:grid-cols-3 gap-8">
 
           <div className="text-center">
-            <div className="w-14 h-14 mx-auto rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-center mb-4">
+            <div className="
+              w-16
+              h-16
+              mx-auto
+              rounded-2xl
+              bg-blue-500/10
+              border
+              border-blue-500/20
+              text-blue-400
+              text-xl
+              font-semibold
+              flex
+              items-center
+              justify-center
+              mb-5
+              ">
               1
             </div>
 
@@ -191,7 +279,22 @@ export default function HomePage() {
           </div>
 
           <div className="text-center">
-            <div className="w-14 h-14 mx-auto rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-center mb-4">
+            <div className="
+              w-16
+              h-16
+              mx-auto
+              rounded-2xl
+              bg-blue-500/10
+              border
+              border-blue-500/20
+              text-blue-400
+              text-xl
+              font-semibold
+              flex
+              items-center
+              justify-center
+              mb-5
+              ">
               2
             </div>
 
@@ -205,7 +308,22 @@ export default function HomePage() {
           </div>
 
           <div className="text-center">
-            <div className="w-14 h-14 mx-auto rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-center mb-4">
+            <div className="
+              w-16
+              h-16
+              mx-auto
+              rounded-2xl
+              bg-blue-500/10
+              border
+              border-blue-500/20
+              text-blue-400
+              text-xl
+              font-semibold
+              flex
+              items-center
+              justify-center
+              mb-5
+              ">
               3
             </div>
 

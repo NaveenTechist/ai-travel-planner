@@ -144,15 +144,74 @@ export default function DashboardPage() {
             : 0;
 
     if (loading) {
-        return (
-            <div className="min-h-screen bg-[#0B1120] flex items-center justify-center text-slate-300">
-                <div className="flex flex-col items-center gap-4">
-                    <div className="h-12 w-12 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl animate-pulse" />
-                    <p className="text-sm tracking-wide text-slate-400">Loading your travel workspace...</p>
+        return (<div className="min-h-screen bg-[#0B1120] flex items-center justify-center">
+
+            <div className="flex flex-col items-center">
+
+                {/* Logo */}
+                <div className="relative">
+
+                    <div className="absolute inset-0 bg-[#5E7CFF]/20 blur-3xl rounded-full" />
+
+                    <div className="relative h-20 w-20 rounded-3xl bg-white/[0.03] border border-white/10 backdrop-blur-xl flex items-center justify-center">
+                        <Globe className="h-9 w-9 text-[#5E7CFF] animate-pulse" />
+                    </div>
+
                 </div>
+
+                {/* Brand */}
+                <h2 className="mt-8 text-2xl font-semibold text-white">
+                    Travel OS
+                </h2>
+
+                <p className="mt-2 text-slate-400 text-sm text-center max-w-sm">
+                    Creating your personalized itinerary, finding hotels,
+                    estimating budgets and preparing your journey.
+                </p>
+
+                {/* Progress Bar */}
+                <div className="mt-8 w-72 h-1 bg-white/5 rounded-full overflow-hidden">
+
+                    <div
+                        className={`
+                            h - full
+                            w-1 /3
+                    bg-gradient-to-r
+                    from-[#5E7CFF]
+                    to-blue-400
+                    animate-[loading_2s_ease-in-out_infinite]
+                          `}
+                    />
+
+                </div>
+
+                {/* Steps */}
+                <div className="mt-6 flex gap-3 text-xs text-slate-500">
+
+                    <span>Planning</span>
+                    <span>•</span>
+                    <span>Optimizing</span>
+                    <span>•</span>
+                    <span>Generating</span>
+                </div>
+
             </div>
+
+            <style jsx global>{`
+    @keyframes loading {
+      0% {
+        transform: translateX(-120%);
+      }
+      100% {
+        transform: translateX(350%);
+      }
+    }
+  `}</style>
+
+        </div>
         );
     }
+
 
     return (
         <main className="min-h-screen bg-[#070B14] text-white overflow-x-hidden">
@@ -171,8 +230,9 @@ export default function DashboardPage() {
                             <div className="flex items-center gap-3">
                                 <Globe className="h-6 w-6 text-[#5E7CFF]" />
                                 <div>
-                                    <h1>Travel OS</h1>
-                                    {/* <p>AI Travel Planner</p> */}
+                                    <h1 className="font-ravex text-xl tracking-wide text-white">
+                                        Travel OS
+                                    </h1>
                                 </div>
                             </div>
 
@@ -267,7 +327,7 @@ export default function DashboardPage() {
                                 </button>
                                 <button
                                     onClick={handleLogout}
-                                    className="rounded-2xl border border-red-500/20 bg-red-500/10 px-4 py-2 text-sm font-medium text-red-300 transition hover:bg-red-500/20"
+                                    className="rounded-lg border border-red-500/20 bg-red-500/10 px-4 py-2 text-sm font-medium text-red-300 transition hover:bg-red-500/20"
                                 >
                                     Logout
                                 </button>
@@ -427,7 +487,8 @@ export default function DashboardPage() {
                                         label="Estimated Cost"
                                         value={`₹${(
                                             selectedTrip.estimatedBudget?.total || 0
-                                        ).toLocaleString()}`}
+                                        ).toLocaleString()
+                                            } `}
                                     />
                                 </div>
                             ) : null}
