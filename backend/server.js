@@ -9,8 +9,8 @@ const app = express();
 
 const allowedOrigins = [
   "http://localhost:3000",
-  "https://ai-travel-planner-onbz.onrender.com",
-  "https://ai-travel-planner-omega-one.vercel.app"
+  "https://ai-travel-planner-omega-one.vercel.app",
+  "http://localhost:3001"
 ];
 
 app.use(

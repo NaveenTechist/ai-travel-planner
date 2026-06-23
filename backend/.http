@@ -18,7 +18,7 @@ Content-Type: application/json
 ####
 
 GET http://localhost:5000/api/trips
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTM2OWIzOTFmMGVmM2Y1NTAxMDhkODYiLCJpYXQiOjE3ODIwMDY0MTQsImV4cCI6MTc4MjYxMTIxNH0.2bl0puuLyhqyYYf7dT0g50g7_6z2SpfsdctF5RH-aRU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTM2OWIzOTFmMGVmM2Y1NTAxMDhkODYiLCJpYXQiOjE3ODIyMDA2MTIsImV4cCI6MTc4MjgwNTQxMn0.OzJU1j5KKuWWtujKXE76qzjfqmGGbEDERI3YjbsazCU
 
 {
   "message": "Protected Route Success",
@@ -237,5 +237,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTM3N
 ####
 
 GET https://ai-travel-planner-onbz.onrender.com/api/trips
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTM2OWIzOTFmMGVmM2Y1NTAxMDhkODYiLCJpYXQiOjE3ODIwMDY0MTQsImV4cCI6MTc4MjYxMTIxNH0.2bl0puuLyhqyYYf7dT0g50g7_6z2SpfsdctF5RH-aRU
+####
+
+GET https://localhost:5000/api/trips
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTM2OWIzOTFmMGVmM2Y1NTAxMDhkODYiLCJpYXQiOjE3ODIwMDY0MTQsImV4cCI6MTc4MjYxMTIxNH0.2bl0puuLyhqyYYf7dT0g50g7_6z2SpfsdctF5RH-aRU
 ####

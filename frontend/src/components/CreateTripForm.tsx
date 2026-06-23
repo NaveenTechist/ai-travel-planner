@@ -1,3 +1,4 @@
+// src/components/CreateTripForm.tsx
 "use client";
 
 import { useState } from "react";
@@ -7,8 +8,8 @@ import {
     Wallet,
     Heart,
     Sparkles,
+    Loader2
 } from "lucide-react";
-import toast from "react-hot-toast";
 
 interface CreateTripFormProps {
     onTripCreated: () => Promise<void>;
@@ -31,9 +32,7 @@ export default function CreateTripForm({
 
         try {
             setLoading(true);
-
             const token = localStorage.getItem("token");
-
             setError("");
 
             if (durationDays < 1) {
@@ -41,16 +40,6 @@ export default function CreateTripForm({
                 setLoading(false);
                 return;
             }
-
-            console.log("Submitting Trip:", {
-                destination,
-                durationDays,
-                budgetTier,
-                interests: interests
-                    .split(",")
-                    .map((item) => item.trim())
-                    .filter(Boolean),
-            });
 
             const res = await fetch(
                 `${process.env.NEXT_PUBLIC_API_URL}/api/trips/generate`,
@@ -63,17 +52,18 @@ export default function CreateTripForm({
                     body: JSON.stringify({
                         destination,
                         durationDays,
-                        budgetTier,
                         interests: interests
                             .split(",")
                             .map((item) => item.trim())
                             .filter(Boolean),
+                        budgetTier,
                     }),
                 }
             );
 
             if (!res.ok) {
-                throw new Error("Failed to generate trip");
+                const errData = await res.json().catch(() => ({}));
+                throw new Error(errData.message || "Failed to generate trip");
             }
 
             await onTripCreated();
@@ -82,9 +72,9 @@ export default function CreateTripForm({
             setDurationDays(3);
             setBudgetTier("Medium");
             setInterests("");
-        } catch (error) {
+        } catch (error: any) {
             console.error(error);
-            alert("Trip generation failed");
+            setError(error.message || "AI Trip generation failed. Please try again.");
         } finally {
             setLoading(false);
         }
@@ -93,101 +83,101 @@ export default function CreateTripForm({
     return (
         <form
             onSubmit={handleSubmit}
-            className="rounded-[32px] border border-white/[0.08] bg-[#111214] p-8 backdrop-blur-xl shadow-[0_20px_80px_rgba(0,0,0,0.35)]"
+            className="rounded-[28px] border border-white/10 bg-[#111214] p-8 shadow-2xl relative"
         >
+            {loading && (
+                <div className="absolute inset-0 bg-[#070B14]/80 backdrop-blur-sm rounded-[28px] z-50 flex flex-col items-center justify-center space-y-4">
+                    <Loader2 className="h-10 w-10 text-[#5E7CFF] animate-spin" />
+                    <p className="text-sm font-semibold text-white">AI is building your dream itinerary...</p>
+                    <p className="text-xs text-slate-400">This might take a minute.</p>
+                </div>
+            )}
+
             <div className="mb-8">
-                <p className="text-xs uppercase tracking-[0.25em] text-slate-500">
-                    AI Travel Planner
-                </p>
-
-                <h2 className="mt-2 text-3xl font-bold text-white">
-                    Create New Trip
+                <div className="flex items-center gap-2">
+                    <Sparkles className="text-[#5E7CFF] h-4 w-4 animate-pulse" />
+                    <p className="text-xs uppercase tracking-[0.25em] text-slate-500 font-semibold">
+                        Travel OS Engine
+                    </p>
+                </div>
+                <h2 className="mt-2 text-2xl font-bold text-white tracking-tight">
+                    New AI Trip Plan
                 </h2>
-
-                <p className="mt-2 text-sm text-slate-400">
-                    Generate a personalized itinerary, packing list and budget plan.
-                </p>
             </div>
 
-            <div className="space-y-5">
-
+            <div className="space-y-6">
                 <div>
                     <label className="mb-2 flex items-center gap-2 text-sm font-medium text-slate-300">
-                        <MapPinned size={16} />
+                        <MapPinned size={16} className="text-[#5E7CFF]" />
                         Destination
                     </label>
-
                     <input
                         type="text"
-                        placeholder="Tokyo, Japan"
+                        placeholder="e.g. Tokyo, Japan or Paris, France"
                         value={destination}
                         onChange={(e) => setDestination(e.target.value)}
                         required
-                        className="w-full rounded-2xl border border-white/[0.08] bg-white/[0.03] px-4 py-4 text-white placeholder:text-slate-500 outline-none transition focus:border-[#5E7CFF] focus:bg-white/[0.05]"
+                        className="w-full rounded-[20px] border border-white/10 bg-white/[0.03] px-4.5 py-3.5 text-white placeholder:text-slate-500 outline-none transition focus:border-[#5E7CFF] focus:bg-white/[0.05]"
                     />
                 </div>
 
-                <div>
-                    <label className="mb-2 flex items-center gap-2 text-sm font-medium text-slate-300">
-                        <CalendarDays size={16} />
-                        Duration (Days)
-                    </label>
+                <div className="grid gap-6 md:grid-cols-2">
+                    <div>
+                        <label className="mb-2 flex items-center gap-2 text-sm font-medium text-slate-300">
+                            <CalendarDays size={16} className="text-[#8B5CF6]" />
+                            Duration (Days)
+                        </label>
+                        <input
+                            type="number"
+                            min={1}
+                            max={30}
+                            placeholder="7"
+                            value={durationDays}
+                            onChange={(e) => setDurationDays(Number(e.target.value))}
+                            required
+                            className="w-full rounded-[20px] border border-white/10 bg-white/[0.03] px-4.5 py-3.5 text-white placeholder:text-slate-500 outline-none transition focus:border-[#5E7CFF] focus:bg-white/[0.05]"
+                        />
+                    </div>
 
-                    <input
-                        type="number"
-                        min={1}
-                        placeholder="7"
-                        value={durationDays}
-                        onChange={(e) =>
-                            setDurationDays(Number(e.target.value))
-                        }
-                        required
-                        className="w-full rounded-2xl border border-white/[0.08] bg-white/[0.03] px-4 py-4 text-white placeholder:text-slate-500 outline-none transition focus:border-[#5E7CFF] focus:bg-white/[0.05]"
-                    />
+                    <div>
+                        <label className="mb-2 flex items-center gap-2 text-sm font-medium text-slate-300">
+                            <Wallet size={16} className="text-emerald-400" />
+                            Budget Tier
+                        </label>
+                        <select
+                            value={budgetTier}
+                            onChange={(e) => setBudgetTier(e.target.value)}
+                            className="w-full rounded-[24px] border border-white/10 bg-[#111214] px-4.5 py-3.5 text-white outline-none transition focus:border-[#5E7CFF]"
+                        >
+                            <option className="bg-[#111214]" value="Low">
+                                Low Budget
+                            </option>
+                            <option className="bg-[#111214]" value="Medium">
+                                Medium Budget
+                            </option>
+                            <option className="bg-[#111214]" value="High">
+                                High Budget
+                            </option>
+                        </select>
+                    </div>
                 </div>
 
                 <div>
                     <label className="mb-2 flex items-center gap-2 text-sm font-medium text-slate-300">
-                        <Wallet size={16} />
-                        Budget Tier
-                    </label>
-
-                    <select
-                        value={budgetTier}
-                        onChange={(e) => setBudgetTier(e.target.value)}
-                        className="w-full rounded-2xl border border-white/[0.08] bg-white/[0.03] px-4 py-4 text-white outline-none transition focus:border-[#5E7CFF]"
-                    >
-                        <option className="bg-[#111214]" value="Low">
-                            Low Budget
-                        </option>
-
-                        <option className="bg-[#111214]" value="Medium">
-                            Medium Budget
-                        </option>
-
-                        <option className="bg-[#111214]" value="High">
-                            High Budget
-                        </option>
-                    </select>
-                </div>
-
-                <div>
-                    <label className="mb-2 flex items-center gap-2 text-sm font-medium text-slate-300">
-                        <Heart size={16} />
+                        <Heart size={16} className="text-pink-400" />
                         Interests
                     </label>
-
                     <input
                         type="text"
-                        placeholder="Food, Hiking, Museums, Beaches..."
+                        placeholder="e.g. Food, Hiking, Museums, Shopping (comma separated)"
                         value={interests}
                         onChange={(e) => setInterests(e.target.value)}
-                        className="w-full rounded-2xl border border-white/[0.08] bg-white/[0.03] px-4 py-4 text-white placeholder:text-slate-500 outline-none transition focus:border-[#5E7CFF] focus:bg-white/[0.05]"
+                        className="w-full rounded-[20px] border border-white/10 bg-white/[0.03] px-4.5 py-3.5 text-white placeholder:text-slate-500 outline-none transition focus:border-[#5E7CFF] focus:bg-white/[0.05]"
                     />
                 </div>
 
                 {error && (
-                    <div className="rounded-2xl border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-300">
+                    <div className="rounded-[20px] border border-red-500/25 bg-red-500/10 p-4 text-sm text-red-300">
                         {error}
                     </div>
                 )}
@@ -195,15 +185,12 @@ export default function CreateTripForm({
                 <button
                     type="submit"
                     disabled={loading}
-                    className="group relative mt-4 w-full overflow-hidden rounded-2xl bg-[#5E7CFF] py-4 font-semibold text-white transition-all duration-300 hover:scale-[1.01] hover:shadow-[0_0_40px_rgba(94,124,255,0.45)] disabled:cursor-not-allowed disabled:opacity-60"
+                    className="
+                        w-full rounded-[16px] bg-[#5E7CFF] hover:bg-[#4d6de6] py-4 font-semibold text-white transition-all duration-300 
+                        shadow-[0_4px_20px_rgba(94,124,255,0.35)] disabled:cursor-not-allowed disabled:opacity-60
+                    "
                 >
-                    <span className="relative z-10">
-                        {loading
-                            ? "Generating AI Trip..."
-                            : "Generate Trip"}
-                    </span>
-
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#5E7CFF] via-[#6F8DFF] to-[#5E7CFF] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                    Generate Trip Details
                 </button>
             </div>
         </form>

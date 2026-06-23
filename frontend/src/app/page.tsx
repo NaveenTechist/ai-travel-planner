@@ -23,7 +23,7 @@ const manrope = Manrope({
 export default function HomePage() {
   return (
     <main
-      className={`${manrope.className} min-h-screen bg-slate-950 text-white`}
+      className={`${manrope.className} min-h-screen bg-[#070B14] text-white`}
     >
       {/* Background Glow */} <div className="absolute inset-0 overflow-hidden pointer-events-none"> <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[700px] h-[700px] bg-blue-600/10 blur-[140px] rounded-full" /> </div>
 
