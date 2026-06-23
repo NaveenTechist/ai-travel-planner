@@ -55,34 +55,35 @@ export default function MobileNav() {
 
                         if (item.isCenter) {
                             return (
-                                <Link
-                                    key={idx}
-                                    href={item.href!}
-                                    className="
-                                        absolute
-                                        left-1/2
-                                        -translate-x-1/2
-                                        -top-5
-                                        h-14
-                                        w-14
-                                        rounded-full
-                                        bg-gradient-to-tr
-                                        from-[#5E7CFF]
-                                        to-[#8B5CF6]
-                                        flex
-                                        items-center
-                                        justify-center
-                                        border
-                                        border-white/25
-                                        shadow-[0_8px_30px_rgba(94,124,255,0.4)]
-                                        hover:scale-105
-                                        transition-all
-                                        duration-200
-                                        z-20
-                                    "
-                                >
-                                    <Icon className="h-7 w-7 text-white" />
-                                </Link>
+                                <div key={idx} className="relative flex items-center justify-center">
+                                    <Link
+                                        href={item.href!}
+                                        className="
+                                            absolute
+                                            left-1/2
+                                            -translate-x-1/2
+                                            -top-7
+                                            h-14
+                                            w-14
+                                            rounded-full
+                                            bg-gradient-to-tr
+                                            from-[#5E7CFF]
+                                            to-[#8B5CF6]
+                                            flex
+                                            items-center
+                                            justify-center
+                                            border
+                                            border-white/25
+                                            shadow-[0_8px_30px_rgba(94,124,255,0.4)]
+                                            hover:scale-105
+                                            transition-all
+                                            duration-200
+                                            z-20
+                                        "
+                                    >
+                                        <Icon className="h-7 w-7 text-white" />
+                                    </Link>
+                                </div>
                             );
                         }
 

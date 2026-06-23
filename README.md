@@ -18,6 +18,10 @@ An AI-powered travel planning application that generates personalized travel iti
 
 ---
 
+![Mobile Devices](./frontend/images/img-3.png)
+
+---
+
 # 🚀 Features
 
 ## Authentication

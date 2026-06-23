@@ -207,17 +207,17 @@ const countryToCode: Record<string, string> = {
  */
 export function getCountryFlag(destination: string | undefined): string {
     if (!destination) return "";
-    
+
     // Split by comma or look up words from back to front
     const parts = destination.split(/,+/).map(p => p.trim().toLowerCase());
-    
+
     for (let i = parts.length - 1; i >= 0; i--) {
         const part = parts[i];
         if (countryToCode[part]) {
             return getFlagEmoji(countryToCode[part]);
         }
     }
-    
+
     // Try word matching if comma separation didn't work directly
     const words = destination.toLowerCase().replace(/[^a-z\s]/g, "").split(/\s+/);
     for (let i = words.length - 1; i >= 0; i--) {
@@ -233,14 +233,17 @@ export function getCountryFlag(destination: string | undefined): string {
             }
         }
     }
-    
+
     return "";
 }
 
 function getFlagEmoji(countryCode: string): string {
-    const codePoints = countryCode
+    return countryCode
         .toUpperCase()
-        .split('')
-        .map(char => 127397 + char.charCodeAt(0));
-    return String.fromCodePoint(...codePoints);
+        .replace(
+            /./g,
+            char => String.fromCodePoint(
+                127397 + char.charCodeAt(0)
+            )
+        );
 }
