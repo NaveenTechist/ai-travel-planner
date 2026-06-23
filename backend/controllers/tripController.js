@@ -34,6 +34,89 @@ const createTrip = async (req, res) => {
 
         const aiTrip = await generateTripPlan(req.body);
 
+        const normalizedTrip = {
+            destination: String(
+                aiTrip.destination
+            ),
+
+            durationDays: Number(
+                aiTrip.durationDays
+            ),
+
+            budgetTier: aiTrip.budgetTier,
+
+            interests:
+                aiTrip.interests || [],
+
+            itinerary:
+                aiTrip.itinerary.map(day => ({
+                    dayNumber:
+                        Number(day.dayNumber),
+
+                    activities:
+                        day.activities.map(
+                            activity => ({
+                                title: String(
+                                    activity.title
+                                ),
+
+                                description:
+                                    String(
+                                        activity.description
+                                    ),
+
+                                estimatedCost:
+                                    Number(
+                                        activity.estimatedCost
+                                    ) || 0,
+                            })
+                        ),
+                })),
+
+            estimatedBudget: {
+                accommodation:
+                    Number(
+                        aiTrip.estimatedBudget.accommodation
+                    ) || 0,
+
+                food:
+                    Number(
+                        aiTrip.estimatedBudget.food
+                    ) || 0,
+
+                activities:
+                    Number(
+                        aiTrip.estimatedBudget.activities
+                    ) || 0,
+
+                transport:
+                    Number(
+                        aiTrip.estimatedBudget.transport
+                    ) || 0,
+            },
+
+            hotels:
+                aiTrip.hotels || [],
+
+            packingList: {
+                crucialDocuments:
+                    aiTrip.packingList
+                        ?.crucialDocuments || [],
+
+                activityEquipment:
+                    aiTrip.packingList
+                        ?.activityEquipment || [],
+
+                climateWear:
+                    aiTrip.packingList
+                        ?.climateWear || [],
+            },
+        };
+
+        console.log(
+            JSON.stringify(aiTrip, null, 2)
+        );
+
 
         // AFTER AI GEN VALIDATE AI RESPONSE
         validateAITrip(aiTrip);
@@ -127,16 +210,35 @@ const addActivity = async (req, res) => {
             });
         }
 
-        day.activities.push({
-            title,
-            description,
+        const newActivity = {
+            title: String(title).trim(),
+            description: String(
+                description || ""
+            ).trim(),
             estimatedCost:
                 Number(estimatedCost) || 0,
-        });
+        };
 
-        await trip.save();
+        await Trip.updateOne(
+            {
+                _id: tripId,
+                userId: req.user.userId,
+                "itinerary.dayNumber":
+                    Number(dayNumber),
+            },
+            {
+                $push: {
+                    "itinerary.$.activities":
+                        newActivity,
+                },
+            }
+        );
+        const updatedTrip =
+            await Trip.findById(tripId);
 
-        return res.json(trip);
+        return res.status(200).json(
+            updatedTrip
+        );
 
     } catch (error) {
         console.error(error);
@@ -461,12 +563,10 @@ const regenerateDay = async (
     );
 
     try {
-
         const {
             tripId,
             dayNumber,
         } = req.params;
-
         // ObjectId validation
         if (
             !mongoose.Types.ObjectId.isValid(
@@ -553,38 +653,86 @@ const regenerateDay = async (
                     dayNum
             );
 
-        trip.itinerary[
-            dayIndex
-        ] = newDay;
+        console.log(newDay)
+        console.log("Updatingg regenerating......")
 
-        await trip.save();
+        const normalizedDay = {
+            dayNumber: Number(newDay.dayNumber),
+
+            activities: (newDay.activities || []).map(
+                (activity) => ({
+                    title: String(
+                        activity.title || ""
+                    ).trim(),
+
+                    description: String(
+                        activity.description || ""
+                    ).trim(),
+
+                    estimatedCost: Number(
+                        activity.estimatedCost
+                    ) || 0,
+                })
+            ),
+        };
+
+        console.log(
+            "TRIP ID:",
+            tripId
+        );
+
+        console.log(
+            "DAY NUM:",
+            dayNum
+        );
+
+        console.log(
+            JSON.stringify(
+                normalizedDay,
+                null,
+                2
+            )
+        );
+
+        await Trip.updateOne(
+            {
+                _id: tripId,
+                userId: req.user.userId,
+                "itinerary.dayNumber": dayNum,
+            },
+            {
+                $set: {
+                    "itinerary.$": normalizedDay,
+                },
+            }
+        );
+
+        const updatedTrip =
+            await Trip.findById(tripId);
+
 
         return res.status(200).json({
             success: true,
             message:
                 "Day regenerated successfully",
-            data: trip,
+            data: updatedTrip,
         });
 
     } catch (error) {
 
         console.error(
-            "REGENERATE DAY ERROR:",
-            error?.message || error
+            "REGENERATE DAY FULL ERROR:"
         );
 
-        if (error.status === 429) {
-            return res.status(429).json({
-                success: false,
-                message:
-                    "Gemini quota exceeded",
-            });
-        }
+        console.error(error);
+
+        console.error(error.stack);
 
         return res.status(500).json({
             success: false,
             message:
-                error?.message || "Internal server error",
+                error.message ||
+                "Internal server error",
         });
     }
 };

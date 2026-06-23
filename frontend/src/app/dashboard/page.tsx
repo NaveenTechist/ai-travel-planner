@@ -172,7 +172,7 @@ export default function DashboardPage() {
                                 <Globe className="h-6 w-6 text-[#5E7CFF]" />
                                 <div>
                                     <h1>Travel OS</h1>
-                                    <p>AI Travel Planner</p>
+                                    {/* <p>AI Travel Planner</p> */}
                                 </div>
                             </div>
 

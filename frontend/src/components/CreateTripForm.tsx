@@ -8,6 +8,7 @@ import {
     Heart,
     Sparkles,
 } from "lucide-react";
+import toast from "react-hot-toast";
 
 interface CreateTripFormProps {
     onTripCreated: () => Promise<void>;

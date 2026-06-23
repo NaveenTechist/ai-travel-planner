@@ -155,25 +155,25 @@ const regenerateTripDay = async ({
     try {
 
         const prompt = `
-Generate itinerary for ONLY day ${dayNumber}.
+        Generate itinerary for ONLY day ${dayNumber}.
 
-Destination: ${destination}
-Budget: ${budgetTier}
-Interests: ${interests.join(", ")}
+        Destination: ${destination}
+        Budget: ${budgetTier}
+        Interests: ${interests.join(", ")}
 
-Return ONLY JSON.
+        Return ONLY JSON.
 
-{
-    "dayNumber": ${dayNumber},
-    "activities": [
         {
-            "title": "",
-            "description": "",
-            "estimatedCost": 0
+            "dayNumber": ${dayNumber},
+            "activities": [
+                {
+                    "title": "",
+                    "description": "",
+                    "estimatedCost": 0
+                }
+            ]
         }
-    ]
-}
-`;
+        `;
 
         const response =
             await ai.models.generateContent({

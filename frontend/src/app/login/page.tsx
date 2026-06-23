@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import api from "@/utils/api";
 
@@ -10,7 +11,8 @@ export default function LoginPage() {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-
+    const [showPassword, setShowPassword] =
+        useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
@@ -125,16 +127,40 @@ export default function LoginPage() {
                             Password
                         </label>
 
-                        <input
-                            type="password"
-                            placeholder="••••••••"
-                            value={password}
-                            onChange={(e) =>
-                                setPassword(e.target.value)
-                            }
-                            required
-                            className="w-full h-12 px-4 rounded-xl bg-black/20 border border-white/[0.08] text-white placeholder:text-slate-500 focus:outline-none focus:border-[#4169E1] transition"
-                        />
+                        <div className="relative">
+                            <input
+                                type={
+                                    showPassword
+                                        ? "text"
+                                        : "password"
+                                }
+                                placeholder="••••••••"
+                                value={password}
+                                onChange={(e) =>
+                                    setPassword(
+                                        e.target.value
+                                    )
+                                }
+                                required
+                                className="w-full h-12 px-4 pr-12 rounded-xl bg-black/20 border border-white/[0.08] text-white placeholder:text-slate-500 focus:outline-none focus:border-[#4169E1] transition"
+                            />
+
+                            <button
+                                type="button"
+                                onClick={() =>
+                                    setShowPassword(
+                                        !showPassword
+                                    )
+                                }
+                                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400"
+                            >
+                                {showPassword ? (
+                                    <EyeOff size={18} />
+                                ) : (
+                                    <Eye size={18} />
+                                )}
+                            </button>
+                        </div>
                     </div>
 
                     {error && (
