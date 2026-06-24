@@ -51,6 +51,7 @@ function DashboardContent() {
 
     const [showCreateTrip, setShowCreateTrip] = useState(false);
     const [greeting, setGreeting] = useState("Good Evening");
+    const [userName, setUserName] = useState("");
 
     // Dynamic greeting based on hour
     useEffect(() => {
@@ -58,6 +59,12 @@ function DashboardContent() {
         if (hour < 12) setGreeting("Good Morning");
         else if (hour < 18) setGreeting("Good Afternoon");
         else setGreeting("Good Evening");
+
+        const user = JSON.parse(
+            localStorage.getItem("user") || "{}"
+        );
+
+        setUserName(user.name || "Traveler");
     }, []);
 
     // Delete trip handler
@@ -126,7 +133,7 @@ function DashboardContent() {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/5 pb-6">
                 <div>
                     <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-white font-ravex">
-                        {greeting}, Naveen 👋
+                        {greeting}, {userName} 👋
                     </h1>
                     <p className="text-sm text-slate-400 mt-1">
                         Ready for your next adventure? Manage your plans and itineraries below.

@@ -28,13 +28,14 @@ export default function LoginPage() {
                 password,
             });
 
-            const { token } = response.data;
+            const { token, user } = response.data;
 
             if (!token) {
                 throw new Error("Token not received");
             }
 
             localStorage.setItem("token", token);
+            localStorage.setItem("user", JSON.stringify(user));
             router.push("/dashboard");
         } catch (err: any) {
             setError(
@@ -48,9 +49,9 @@ export default function LoginPage() {
 
     return (
         <main className="relative min-h-screen bg-[#070B14] overflow-hidden flex items-center justify-center px-6">
-            
-            {/* Ambient Glows */} 
-            <div className="absolute top-[-150px] left-[-150px] h-[400px] w-[400px] rounded-full bg-[#5E7CFF]/10 blur-[120px] pointer-events-none" /> 
+
+            {/* Ambient Glows */}
+            <div className="absolute top-[-150px] left-[-150px] h-[400px] w-[400px] rounded-full bg-[#5E7CFF]/10 blur-[120px] pointer-events-none" />
             <div className="absolute bottom-[-150px] right-[-150px] h-[400px] w-[400px] rounded-full bg-[#8B5CF6]/10 blur-[120px] pointer-events-none" />
 
             {/* Grid Overlay */}

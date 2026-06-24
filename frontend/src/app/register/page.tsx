@@ -50,9 +50,9 @@ export default function RegisterPage() {
 
     return (
         <main className="relative min-h-screen bg-[#070B14] overflow-hidden flex items-center justify-center px-6">
-            
-            {/* Ambient Glows */} 
-            <div className="absolute top-[-150px] left-[-150px] h-[400px] w-[400px] rounded-full bg-[#5E7CFF]/10 blur-[120px] pointer-events-none" /> 
+
+            {/* Ambient Glows */}
+            <div className="absolute top-[-150px] left-[-150px] h-[400px] w-[400px] rounded-full bg-[#5E7CFF]/10 blur-[120px] pointer-events-none" />
             <div className="absolute bottom-[-150px] right-[-150px] h-[400px] w-[400px] rounded-full bg-[#8B5CF6]/10 blur-[120px] pointer-events-none" />
 
             {/* Grid Overlay */}
@@ -105,6 +105,8 @@ export default function RegisterPage() {
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 required
+                                minLength={3}
+                                maxLength={20}
                                 className="w-full h-12 px-4 rounded-[20px] bg-white/[0.03] border border-white/10 text-white placeholder:text-slate-500 focus:outline-none focus:border-[#5E7CFF] transition text-sm"
                             />
                         </div>

@@ -13,11 +13,11 @@ const register = async (req, res) => {
                 message: "Request body is missing"
             });
         }
-        const { email, password } = req.body;
+        const { name, email, password } = req.body;
 
-        if (!email || !password) {
+        if (!name || !email || !password) {
             return res.status(400).json({
-                message: "Email and password are required",
+                message: "Name, email and password are required",
             });
         }
 
@@ -32,6 +32,7 @@ const register = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const user = await User.create({
+            name,
             email,
             password: hashedPassword,
         });
@@ -50,6 +51,7 @@ const register = async (req, res) => {
             success: true,
             token,
             user: {
+                name: user.name,
                 id: user._id,
                 email: user.email,
             },
@@ -78,7 +80,11 @@ const login = async (req, res) => {
             });
         }
 
-        const user = await User.findOne({ email });
+        const user = await User.findOne({
+            email,
+        }).select("+password");
+
+        // console.log("THis is user data: ", user)
 
         if (!user) {
             return res.status(401).json({
@@ -99,6 +105,7 @@ const login = async (req, res) => {
 
         const token = jwt.sign(
             {
+                name: user.name,
                 userId: user._id,
             },
             process.env.JWT_SECRET,
@@ -110,6 +117,7 @@ const login = async (req, res) => {
         res.status(200).json({
             token,
             user: {
+                name: user.name,
                 id: user._id,
                 email: user.email,
             },

@@ -57,7 +57,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             const response = await api.get("/trips");
             const tripsData = Array.isArray(response.data?.data) ? response.data.data : [];
             setTrips(tripsData);
-            
+
             // Reconcile selected trip
             const storedId = localStorage.getItem("selectedTripId");
             if (storedId && tripsData.some((t: Trip) => t._id === storedId)) {
@@ -137,7 +137,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 <div className="flex flex-col items-center">
                     <div className="relative">
                         <div className="absolute inset-0 bg-[#5E7CFF]/20 blur-3xl rounded-full glow-bg" />
-                        <div className="relative h-20 w-20 rounded-[28px] border border-white/10 bg-white/[0.03] backdrop-blur-xl flex items-center justify-center">
+                        <div className="relative h-20 w-20 -mb-8  flex items-center justify-center">
                             <Globe className="h-9 w-9 text-[#5E7CFF] animate-spin" style={{ animationDuration: '3s' }} />
                         </div>
                     </div>
@@ -167,7 +167,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             }}
         >
             <div className="min-h-screen bg-[#070B14] text-white flex flex-col lg:flex-row relative">
-                
+
                 {/* Desktop Fixed Sidebar */}
                 <AppSidebar />
 
@@ -176,7 +176,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     {/* Ambient Glows */}
                     <div className="absolute top-0 left-1/4 h-[500px] w-[500px] rounded-full bg-[#5E7CFF]/5 blur-[140px] pointer-events-none z-0" />
                     <div className="absolute bottom-10 right-0 h-[400px] w-[400px] rounded-full bg-[#8B5CF6]/5 blur-[120px] pointer-events-none z-0" />
-                    
+
                     <div className="relative z-10 flex-1 flex flex-col">
                         {children}
                     </div>
@@ -190,7 +190,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     <div className="fixed inset-0 z-[999] bg-black/70 backdrop-blur-md flex items-start justify-center p-4 pt-20 md:pt-32">
                         {/* Overlay backdrop closer */}
                         <div className="absolute inset-0" onClick={() => setCommandOpen(false)} />
-                        
+
                         <div className="relative w-full max-w-2xl overflow-hidden rounded-[28px] border border-white/10 bg-[#111214] shadow-2xl z-10 flex flex-col animate-[fadeIn_0.2s_ease-out]">
                             <div className="flex items-center gap-3 border-b border-white/10 px-5 py-4">
                                 <Search className="text-slate-400 h-5 w-5" />
@@ -201,7 +201,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                     placeholder="Search trips, actions, and sections..."
                                     className="w-full bg-transparent text-white text-lg placeholder:text-slate-500 outline-none"
                                 />
-                                <button 
+                                <button
                                     onClick={() => setCommandOpen(false)}
                                     className="h-8 w-8 rounded-xl bg-white/[0.05] border border-white/10 flex items-center justify-center text-slate-400 hover:text-white transition"
                                 >
@@ -273,7 +273,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div className="border-t border-white/5 bg-black/20 px-5 py-3 flex items-center justify-between text-xs text-slate-500">
                                 <span>Tip: Use ↑↓ arrows to navigate, Esc to close</span>
                                 <kbd className="rounded bg-white/5 px-2 py-0.5 border border-white/10">ESC</kbd>
